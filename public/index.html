@@ -167,7 +167,7 @@
   .sidebar-backdrop.show { display: block; }
 
   /* ─── MAIN LAYOUT ─── */
-  .app { padding-top: 60px; display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  .app { padding-top: 60px; min-height: 100vh; }
   .sidebar { position: fixed; top: 60px; left: 0; bottom: 0; width: 260px; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0; }
   .sidebar::-webkit-scrollbar { width: 4px; }
   .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -178,18 +178,18 @@
   .nav-item .icon { font-size: 1rem; flex-shrink: 0; }
   .nav-item .check { margin-left: auto; color: var(--success); font-size: .8rem; opacity: 0; }
   .nav-item.done .check { opacity: 1; }
-  .main { margin-left: 260px; padding: 40px; min-width: 0; }
+  .main { margin-left: 260px; padding: 40px; }
   .screen { display: none; animation: fadeIn .3s ease; }
   .screen.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ─── HERO ─── */
-  .hero { text-align: center; padding: 60px 20px; }
+  .hero { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; }
   .hero-badge { display: inline-block; background: rgba(124,111,255,.15); border: 1px solid rgba(124,111,255,.3); color: var(--accent); font-family: var(--mono); font-size: .7rem; padding: 4px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: .1em; }
-  .hero h1 { font-family: var(--display); font-size: clamp(1.6rem,4vw,3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 16px; word-break: break-word; }
+  .hero h1 { font-family: var(--display); font-size: clamp(1.8rem,4.5vw,3.5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 16px; word-break: break-word; max-width: 100%; }
   .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .hero p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin: 0 auto 40px; }
-  .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; text-align: left; }
+  .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; text-align: left; width: 100%; }
   .chapter-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
   .chapter-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
   .chapter-card:nth-child(1)::before { background: var(--accent); }
@@ -595,7 +595,6 @@
 
 <!-- MAIN -->
 <div class="app">
-  <div style="width:260px;flex-shrink:0"></div>
   <div class="main">
 
     <!-- HOME -->
@@ -665,7 +664,7 @@
         <div class="tab-content" id="t2c"><div class="content-block formula"><div class="block-label">VERDOPPLUNGSZEIT & HALBWERTSZEIT</div><h4>Definition</h4><div class="zwei-spalten"><div><p style="margin-bottom:8px"><strong class="hl3">Verdopplungszeit:</strong></p><div class="math-box" style="margin-top:10px">qⁿ = 2 → n = log_q(2)</div></div><div><p style="margin-bottom:8px"><strong class="hl2">Halbwertszeit:</strong></p><div class="math-box" style="margin-top:10px">qⁿ = 0,5 → n = log_q(0,5)</div></div></div></div></div>
         <div class="tab-content" id="t2d"><div class="content-block formula"><div class="block-label">VORGEHEN</div><h4>Exponentialfunktion durch zwei Punkte aufstellen</h4><ul class="feature-list"><li>Beide Punkte einsetzen → zwei Gleichungen</li><li>Gleichungen <strong class="hl">dividieren</strong> → a fällt weg</li><li>b berechnen, dann a</li></ul></div><div class="content-block example"><div class="block-label">BEISPIEL</div><h4>P(1 | 6) und Q(4 | 48)</h4><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Gleichungssystem</div><div class="math">(I) a · b¹ = 6 &nbsp;&nbsp; (II) a · b⁴ = 48</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Dividieren (II):(I)</div><div class="math">b³ = 48/6 = 8 → b = 2</div></div></div><div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ergebnis</div><div class="math">f(x) = 3 · 2ˣ</div></div></div></div></div></div>
       </div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k2-quiz')">Quiz</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k2-quiz')">Zum Quiz ✏️</button></div>
     </div>
 
     <!-- K2 QUIZ -->
@@ -681,7 +680,7 @@
         <div class="tab-content" id="t3c"><div class="content-block formula"><div class="block-label">EXPONENTIALGLEICHUNGEN</div><h4>bˣ = c lösen</h4><div class="math-box">bˣ = c  ⟹  x = log_b(c)</div><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Vorfaktor wegdividieren</div><div class="math">500 · 1,08ˣ = 1200 | ÷ 500 → 1,08ˣ = 2,4</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Logarithmus anwenden</div><div class="math">x = log(2,4)/log(1,08) ≈ 11,38</div></div></div></div></div></div>
         <div class="tab-content" id="t3d"><div class="content-block example"><div class="block-label">BEISPIEL – VERDOPPLUNGSZEIT</div><h4>5 % jährlich – wann verdoppelt?</h4><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="math">1,05ⁿ = 2</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="math">n = log₁,₀₅(2) ≈ 14,21 Jahre</div></div></div></div></div></div>
       </div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k3-rechner')">Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k3-quiz')">Quiz</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k3-rechner')">Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button></div>
     </div>
 
     <!-- K3 RECHNER -->
@@ -690,7 +689,7 @@
       <div class="calculator"><div class="calc-title">Logarithmus berechnen</div><div class="calc-form"><div class="form-group"><label>Basis b</label><input type="number" id="log-b" value="2" step="0.01"></div><div class="form-group"><label>Argument x</label><input type="number" id="log-x" value="32" step="0.01"></div></div><button class="btn btn-primary" onclick="calcLog()">Berechnen</button><div class="calc-result" id="log-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
       <div class="calculator"><div class="calc-title">Exponentialgleichung lösen: a · bˣ = c</div><div class="calc-form"><div class="form-group"><label>Vorfaktor a</label><input type="number" id="eq-a" value="500"></div><div class="form-group"><label>Basis b</label><input type="number" id="eq-b" value="1.08" step="0.001"></div><div class="form-group"><label>Ergebnis c</label><input type="number" id="eq-c" value="1200"></div></div><button class="btn btn-primary" onclick="solveEq()">Gleichung lösen</button><div class="calc-result" id="eq-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
       <div class="calculator"><div class="calc-title">Verdopplungszeit / Halbwertszeit</div><div class="calc-form"><div class="form-group"><label>Typ</label><select id="vhw-type"><option value="double">Verdopplungszeit</option><option value="half">Halbwertszeit</option></select></div><div class="form-group"><label>Wachstumsrate p in %</label><input type="number" id="vhw-p" value="5" step="0.1"></div></div><button class="btn btn-primary" onclick="calcVHW()">Berechnen</button><div class="calc-result" id="vhw-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
-      <button class="btn btn-primary" onclick="showScreen('k3-quiz')">Quiz</button>
+      <button class="btn btn-primary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button>
     </div>
 
     <!-- K3 QUIZ -->
@@ -712,7 +711,7 @@
       <div class="lesson-header"><div class="tag">EXTRA</div><h2>Lernkarten</h2></div>
       <p style="color:var(--muted);margin-bottom:24px">Klicke auf die Karte, um die Antwort zu sehen.</p>
       <div class="flashcard-wrap"><div class="flashcard" id="flashcard" onclick="flipCard()"><div class="card-face card-front"><div class="hint">FRAGE — klicken zum Umdrehen</div><div class="term" id="fc-term">–</div><div class="definition" id="fc-hint" style="color:var(--muted)"></div></div><div class="card-face card-back"><div class="hint">ANTWORT</div><div class="math-expr" id="fc-formula"></div><div class="definition" id="fc-answer"></div></div></div></div>
-      <div class="flashcard-nav"><button class="btn btn-secondary" onclick="prevCard()">Zurück</button><div class="card-counter"><span id="fc-current">1</span> / <span id="fc-total">1</span></div><button class="btn btn-secondary" onclick="nextCard()">Weiter →</button></div>
+      <div class="flashcard-nav"><button class="btn btn-secondary" onclick="prevCard()">← Zurück</button><div class="card-counter"><span id="fc-current">1</span> / <span id="fc-total">1</span></div><button class="btn btn-secondary" onclick="nextCard()">Weiter</button></div>
     </div>
 
     <!-- FORMELSAMMLUNG -->
@@ -1173,7 +1172,7 @@ function renderQuiz(key) {
       </div>
       <div class="quiz-nav">
         <div style="color:var(--muted);font-size:.8rem;font-family:var(--mono)">${qs.answers.filter(a=>a).length} richtig</div>
-        <button class="btn btn-primary" id="next-btn-${key}" onclick="nextQuestion('${key}')" disabled>Weiter</button>
+        <button class="btn btn-primary" id="next-btn-${key}" onclick="nextQuestion('${key}')" disabled>Weiter →</button>
       </div>
     </div>`;
 }

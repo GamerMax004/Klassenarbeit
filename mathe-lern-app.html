@@ -1,0 +1,2879 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathe 10 – Exponentialfunktionen & Logarithmen</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<style>
+  :root {
+    --bg: #0e0e14;
+    --surface: #16161f;
+    --surface2: #1e1e2a;
+    --border: #2a2a3a;
+    --accent: #7c6fff;
+    --accent2: #ff6b6b;
+    --accent3: #4ecdc4;
+    --accent4: #ffd93d;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --success: #4ecdc4;
+    --error: #ff6b6b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(14,14,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo span { color: var(--accent); }
+
+  .progress-bar-wrap {
+    flex: 1;
+    max-width: 300px;
+    margin: 0 24px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .xp-display {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent4);
+    white-space: nowrap;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  .app {
+    padding-top: 60px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-section {
+    padding: 8px 16px 4px;
+    font-size: 0.65rem;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+    font-size: 0.88rem;
+    color: var(--muted);
+    position: relative;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+  .nav-item.active {
+    background: var(--surface2);
+    color: var(--text);
+    border-left-color: var(--accent);
+  }
+
+  .nav-item .icon { font-size: 1rem; flex-shrink: 0; }
+
+  .nav-item .check {
+    margin-left: auto;
+    color: var(--success);
+    font-size: 0.8rem;
+    opacity: 0;
+  }
+
+  .nav-item.done .check { opacity: 1; }
+  .nav-item.done { color: var(--text); }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    margin-left: 260px;
+    padding: 40px;
+    max-width: 900px;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(124,111,255,0.15);
+    border: 1px solid rgba(124,111,255,0.3);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.1em;
+  }
+
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin: 0 auto 40px; }
+
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+    text-align: left;
+  }
+
+  .chapter-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .chapter-card:nth-child(1)::before { background: var(--accent); }
+  .chapter-card:nth-child(2)::before { background: var(--accent3); }
+  .chapter-card:nth-child(3)::before { background: var(--accent2); }
+  .chapter-card:nth-child(4)::before { background: var(--accent4); }
+
+  .chapter-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .chapter-card .num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .chapter-card h3 {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .chapter-card p { font-size: 0.8rem; color: var(--muted); }
+
+  /* ─── LESSON CARDS ─── */
+  .lesson-header {
+    margin-bottom: 32px;
+  }
+
+  .lesson-header .tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .lesson-header h2 {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  /* ─── CONTENT BLOCKS ─── */
+  .content-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .content-block.formula {
+    border-color: rgba(124,111,255,0.4);
+    background: rgba(124,111,255,0.05);
+  }
+
+  .content-block.example {
+    border-color: rgba(78,205,196,0.4);
+    background: rgba(78,205,196,0.05);
+  }
+
+  .content-block.warning {
+    border-color: rgba(255,107,107,0.4);
+    background: rgba(255,107,107,0.05);
+  }
+
+  .block-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .formula .block-label { color: var(--accent); }
+  .example .block-label { color: var(--accent3); }
+  .warning .block-label { color: var(--accent2); }
+
+  .content-block h4 {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .content-block p {
+    color: #c0c0d8;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    font-size: 0.93rem;
+  }
+
+  .math-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: var(--mono);
+    font-size: 1rem;
+    text-align: center;
+    margin: 12px 0;
+    color: var(--accent4);
+    letter-spacing: 0.02em;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 12px 0;
+  }
+
+  .comparison-table th {
+    background: var(--surface2);
+    padding: 10px 14px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .comparison-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .comparison-table tr:last-child td { border-bottom: none; }
+
+  .value-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    margin: 12px 0;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .value-table th {
+    background: var(--surface2);
+    padding: 8px 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .value-table td {
+    padding: 8px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    color: var(--accent4);
+  }
+
+  .value-table tr:last-child td { border-bottom: none; }
+  .value-table .label-col { color: var(--muted); text-align: left; }
+
+  ul.feature-list {
+    list-style: none;
+    margin: 8px 0;
+  }
+
+  ul.feature-list li {
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 0.9rem;
+    color: #c0c0d8;
+    line-height: 1.5;
+  }
+
+  ul.feature-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  /* ─── QUIZ ─── */
+  .quiz-container {
+    max-width: 680px;
+  }
+
+  .quiz-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+
+  .quiz-dot {
+    height: 4px;
+    flex: 1;
+    background: var(--border);
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+
+  .quiz-dot.done { background: var(--success); }
+  .quiz-dot.current { background: var(--accent); }
+
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+
+  .quiz-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .quiz-question {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .quiz-context {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-family: var(--mono);
+    background: var(--bg);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .quiz-options {
+    display: grid;
+    gap: 10px;
+  }
+
+  .quiz-option {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    color: var(--text);
+  }
+
+  .quiz-option:hover:not(.selected):not(.disabled) {
+    border-color: var(--accent);
+    background: rgba(124,111,255,0.1);
+  }
+
+  .quiz-option.correct {
+    border-color: var(--success);
+    background: rgba(78,205,196,0.1);
+    color: var(--success);
+  }
+
+  .quiz-option.wrong {
+    border-color: var(--error);
+    background: rgba(255,107,107,0.1);
+    color: var(--error);
+  }
+
+  .quiz-option.disabled { cursor: not-allowed; }
+
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    background: var(--bg);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .quiz-feedback {
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: rgba(78,205,196,0.1); border: 1px solid rgba(78,205,196,0.3); color: var(--success); }
+  .quiz-feedback.wrong-fb { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: var(--error); }
+
+  .quiz-feedback strong { display: block; margin-bottom: 4px; font-family: var(--mono); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: #6a5dee; transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  /* ─── RESULT SCREEN ─── */
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .result-emoji { font-size: 4rem; margin-bottom: 16px; }
+
+  .result-score {
+    font-family: var(--display);
+    font-size: 4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .result-label { color: var(--muted); margin-bottom: 24px; }
+
+  .xp-gained {
+    background: rgba(255,217,61,0.1);
+    border: 1px solid rgba(255,217,61,0.3);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: var(--mono);
+    color: var(--accent4);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  /* ─── FORMELSAMMLUNG ─── */
+  .formula-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .formula-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .formula-item .desc { color: var(--muted); font-size: 0.9rem; }
+  .formula-item .expr {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    color: var(--accent4);
+    text-align: center;
+    background: var(--bg);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── RECHNER ─── */
+  .calculator {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .calc-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  .calc-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+  }
+
+  .calc-result {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    min-height: 60px;
+    color: var(--accent4);
+    line-height: 1.8;
+  }
+
+  /* ─── STEP SOLUTION ─── */
+  .step-list {
+    counter-reset: steps;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 32px;
+    height: 32px;
+    background: rgba(124,111,255,0.15);
+    border: 1px solid rgba(124,111,255,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content .step-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.92rem;
+  }
+
+  .step-content p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .step-content .math {
+    font-family: var(--mono);
+    color: var(--accent4);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    display: inline-block;
+    margin: 6px 0;
+    font-size: 0.88rem;
+  }
+
+  /* ─── FLASHCARDS ─── */
+  .flashcard-wrap {
+    perspective: 1000px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+  }
+
+  .flashcard {
+    width: 100%;
+    aspect-ratio: 3/2;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+  }
+
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .card-front {
+    background: var(--surface);
+  }
+
+  .card-back {
+    background: linear-gradient(135deg, rgba(124,111,255,0.1), rgba(78,205,196,0.1));
+    border-color: rgba(124,111,255,0.3);
+    transform: rotateY(180deg);
+  }
+
+  .card-face .hint {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+
+  .card-face .term {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .card-face .definition {
+    font-size: 0.9rem;
+    color: #c0c0d8;
+    line-height: 1.6;
+  }
+
+  .card-face .math-expr {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    color: var(--accent4);
+    margin: 12px 0;
+  }
+
+  .flashcard-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .card-counter {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ─── STATS ─── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ─── SECTION TABS ─── */
+  .section-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface2);
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    color: var(--muted);
+    border: none;
+    background: transparent;
+    font-family: var(--sans);
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ─── CHART ─── */
+  .chart-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  canvas { max-width: 100%; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 0.88rem;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(78,205,196,0.4); color: var(--success); }
+  .toast.error { border-color: rgba(255,107,107,0.4); color: var(--error); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1100px) {
+    .sidebar { width: 220px; }
+    .main { margin-left: 220px; padding: 28px 24px; }
+  }
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+      z-index: 300;
+      width: 270px;
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .formula-item { grid-template-columns: 1fr; }
+    .chapter-grid { grid-template-columns: 1fr 1fr; }
+    .progress-bar-wrap { max-width: 140px; }
+    .hero { padding: 36px 8px; }
+    .hero h1 { font-size: clamp(1.5rem, 6vw, 2.4rem); }
+  }
+  @media (max-width: 480px) {
+    .chapter-grid { grid-template-columns: 1fr; }
+    .calc-form { grid-template-columns: 1fr; }
+    .section-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+    .tab { flex: 0 0 auto; }
+    .result-card { padding: 28px 20px; }
+    .quiz-card { padding: 20px 16px; }
+    .lesson-header h2 { font-size: 1.5rem; }
+    .formula-grid { gap: 10px; }
+    .xp-display { font-size: 0.68rem; }
+    header { padding: 0 14px; }
+    .logo { font-size: 0.95rem; }
+  }
+
+  /* ─── HAMBURGER ─── */
+  .hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 6px;
+    border: none;
+    background: transparent;
+    margin-right: 6px;
+  }
+  .hamburger-btn span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.22s ease;
+  }
+  .hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 768px) { .hamburger-btn { display: flex; } }
+
+  /* sidebar backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 299;
+    backdrop-filter: blur(2px);
+  }
+  .sidebar-backdrop.show { display: block; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+  strong.hl { color: var(--accent4); }
+  strong.hl2 { color: var(--accent); }
+  strong.hl3 { color: var(--accent3); }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(124,111,255,0.2);
+    color: var(--accent);
+  }
+
+  .zwei-spalten { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .zwei-spalten { grid-template-columns: 1fr; } }
+
+  /* ─── LOGIN OVERLAY ─── */
+  #login-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: clamp(28px, 6vw, 52px);
+    width: 100%; max-width: 420px;
+    text-align: center;
+    animation: fadeIn .4s ease;
+  }
+  .login-logo { font-family: var(--display); font-size: 1.6rem; font-weight: 800; margin-bottom: 4px; }
+  .login-logo span { color: var(--accent); }
+  .login-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 36px; line-height: 1.5; }
+  .ms-btn {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%; padding: 13px 20px;
+    background: #ffffff; color: #1a1a1a;
+    border: none; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer;
+    font-family: var(--sans);
+    box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    transition: all .15s;
+  }
+  .ms-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
+  .login-divider {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 0.75rem; margin: 18px 0;
+  }
+  .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background: var(--border); }
+  .login-info { font-size: 0.76rem; color: var(--muted); line-height: 1.6; margin-top: 16px; }
+  .login-error {
+    background: rgba(255,107,107,.1); border: 1px solid rgba(255,107,107,.3);
+    color: var(--error); border-radius: 8px; padding: 10px 14px;
+    font-size: 0.82rem; margin-top: 14px; display: none;
+  }
+
+  /* ─── ADMIN MODAL ─── */
+  .modal-backdrop {
+    position: fixed; inset: 0; z-index: 1100;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px; width: 100%; max-width: 480px;
+    animation: fadeIn .2s ease;
+  }
+  .modal-box h3 { font-family: var(--display); font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; }
+  .modal-box label { display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; }
+  .modal-box input[type=password], .modal-box textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; color: var(--text);
+    font-family: var(--mono); font-size: 0.88rem; outline: none;
+    transition: border-color .15s; margin-bottom: 14px;
+  }
+  .modal-box textarea { resize: vertical; min-height: 100px; }
+  .modal-box input:focus, .modal-box textarea:focus { border-color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+  .email-chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px; min-height: 52px; margin-bottom: 14px;
+  }
+  .email-chip {
+    background: rgba(78,205,196,.15); border: 1px solid rgba(78,205,196,.3);
+    color: var(--accent3); border-radius: 20px;
+    padding: 3px 10px; font-size: 0.76rem; font-family: var(--mono);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .chip-del { cursor: pointer; opacity: .6; font-size: 0.9rem; }
+  .chip-del:hover { opacity: 1; color: var(--error); }
+
+  /* ─── TIP TOGGLE ─── */
+  .tip-box {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 24px; overflow: hidden;
+  }
+  .tip-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; cursor: pointer; user-select: none;
+    transition: background .15s;
+  }
+  .tip-toggle:hover { background: rgba(124,111,255,.07); }
+  .tip-toggle-label { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); letter-spacing: .06em; }
+  .tip-arrow { font-size: 0.7rem; color: var(--muted); transition: transform .25s; }
+  .tip-arrow.open { transform: rotate(180deg); }
+  .tip-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s ease, padding .3s ease;
+    font-family: var(--mono); font-size: 0.85rem; color: var(--muted);
+    padding: 0 14px;
+  }
+  .tip-body.open { max-height: 120px; padding: 0 14px 12px; }
+
+  /* ─── USER CHIP (header) ─── */
+  .user-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px 3px 3px;
+    font-size: 0.78rem; color: var(--muted); cursor: default;
+  }
+  .user-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  @media (max-width: 480px) { .user-name { display: none; } }
+
+  /* ─── FOOTER ─── */
+  .app-footer {
+    margin-top: 56px; padding: 20px 40px;
+    background: var(--surface); border-top: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 12px;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+  .footer-link {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: .04em;
+    color: var(--muted); cursor: pointer; text-decoration: none;
+    transition: color .15s;
+  }
+  .footer-link:hover { color: var(--text); }
+  @media (max-width: 480px) { .app-footer { padding: 16px; } }
+
+  /* ─── LEGAL MODAL ─── */
+  .legal-backdrop {
+    position: fixed; inset: 0; z-index: 950;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(4px);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 40px 16px; overflow-y: auto;
+  }
+  .legal-backdrop.show { display: flex; }
+  .legal-box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 36px; width: 100%; max-width: 680px; position: relative;
+    animation: fadeIn .25s ease;
+  }
+  .legal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted); font-size: .9rem; transition: color .15s;
+  }
+  .legal-close:hover { color: var(--text); }
+  .legal-box h2 { font-family: var(--display); font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; padding-right: 40px; }
+  .legal-box h3 { font-family: var(--display); font-weight: 700; font-size: .95rem; color: var(--accent); margin: 18px 0 6px; }
+  .legal-box p { color: #c0c0d8; font-size: .87rem; line-height: 1.7; margin-bottom: 8px; }
+  .legal-box ul { padding-left: 18px; color: #c0c0d8; font-size: .87rem; line-height: 1.7; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN OVERLAY ═══ -->
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">Mathe <span>10</span></div>
+    <div class="login-sub">Hollenberg-Gymnasium Waldbröl · Klasse 10<br>Bitte melde dich mit deinem Schulkonto an.</div>
+    <button class="ms-btn" onclick="doMicrosoftLogin()">
+      <svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>
+      Mit Microsoft anmelden
+    </button>
+    <div id="login-error" class="login-error">⛔ Diese E-Mail-Adresse ist nicht freigeschalten. Wende dich an deinen Lehrer.</div>
+    <div class="login-divider">Admin</div>
+    <button class="btn btn-secondary" style="width:100%;font-size:0.8rem" onclick="openAdminLogin()">🔐 Administrator-Zugang</button>
+    <div class="login-info">Der Zugang ist auf freigeschaltete Schul-E-Mail-Adressen beschränkt.<br>Dein Lernfortschritt wird nach dem Login automatisch gespeichert.</div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PASSWORD MODAL ═══ -->
+<div class="modal-backdrop" id="adminPwModal">
+  <div class="modal-box">
+    <h3>🔐 Administrator-Anmeldung</h3>
+    <label>Admin-Passwort</label>
+    <input type="password" id="adminPwInput" placeholder="Passwort eingeben …" onkeydown="if(event.key==='Enter')checkAdminPw()">
+    <div id="adminPwErr" style="color:var(--error);font-size:.82rem;margin-bottom:10px;display:none">✗ Falsches Passwort</div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('adminPwModal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="checkAdminPw()">Anmelden</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PANEL MODAL ═══ -->
+<div class="modal-backdrop" id="adminPanel">
+  <div class="modal-box">
+    <h3>⚙️ Freigeschaltete E-Mail-Adressen</h3>
+    <div class="email-chips" id="emailChips"></div>
+    <label>Neue Adresse(n) hinzufügen (eine pro Zeile)</label>
+    <textarea id="newEmailsInput" placeholder="schüler@schule.de&#10;name@gymnasium.de"></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('adminPanel')">Schließen</button>
+      <button class="btn btn-secondary" style="color:var(--error)" onclick="clearAllEmails()">Alle löschen</button>
+      <button class="btn btn-primary" onclick="saveEmails()">💾 Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DATENSCHUTZ MODAL ═══ -->
+<div class="legal-backdrop" id="datenschutzModal">
+  <div class="legal-box">
+    <div class="legal-close" onclick="closeLegal('datenschutzModal')">✕</div>
+    <h2>🔒 Datenschutzerklärung</h2>
+    <h3>1. Verantwortliche Stelle</h3>
+    <p>Hollenberg-Gymnasium Waldbröl, vertreten durch die Schulleitung. Diese Lern-App wird im Rahmen des Mathematikunterrichts in Klasse 10 eingesetzt.</p>
+    <h3>2. Microsoft-Anmeldung (Azure AD)</h3>
+    <p>Die Anmeldung erfolgt über Microsoft Azure Active Directory. Dabei werden folgende Daten verarbeitet:</p>
+    <ul><li>Name und E-Mail-Adresse aus dem Schulkonto</li><li>Authentifizierungstoken (temporär, nur für die Sitzung)</li></ul>
+    <p>Es werden keine Passwörter lokal gespeichert. Die Authentifizierung erfolgt ausschließlich über Microsoft-Server gemäß den Datenschutzbestimmungen von Microsoft.</p>
+    <h3>3. Lernfortschritt</h3>
+    <p>Dein Lernfortschritt (XP-Punkte, Quiz-Ergebnisse, besuchte Inhalte) wird lokal im Browser (localStorage) gespeichert und ist an dein Gerät gebunden. Es findet keine Übertragung an externe Server statt.</p>
+    <h3>4. Cookies und lokaler Speicher</h3>
+    <p>Die App verwendet localStorage ausschließlich zur Speicherung von Lernfortschritt und freigeschalteten E-Mail-Adressen (Admin). Es werden keine Tracking- oder Werbe-Cookies eingesetzt.</p>
+    <h3>5. Datenlöschung</h3>
+    <p>Du kannst deinen Lernfortschritt jederzeit durch Leeren des Browser-Caches löschen. Beim Abmelden werden alle sitzungsbezogenen Daten entfernt.</p>
+    <h3>6. Kontakt</h3>
+    <p>Bei Fragen zum Datenschutz wende dich an die Schulverwaltung des Hollenberg-Gymnasiums Waldbröl.</p>
+  </div>
+</div>
+
+<!-- ═══ IMPRESSUM MODAL ═══ -->
+<div class="legal-backdrop" id="impressumModal">
+  <div class="legal-box">
+    <div class="legal-close" onclick="closeLegal('impressumModal')">✕</div>
+    <h2>📋 Impressum</h2>
+    <h3>Herausgeber</h3>
+    <p><strong>Hollenberg-Gymnasium Waldbröl</strong><br>Schulstraße 1 · 51545 Waldbröl<br>Nordrhein-Westfalen, Deutschland</p>
+    <h3>Verantwortlich für den Inhalt</h3>
+    <p>Mathematikfachschaft, Klasse 10. Diese Lern-App wurde als digitales Unterrichtsmittel entwickelt.</p>
+    <h3>Zweck</h3>
+    <p>Diese Webanwendung dient ausschließlich Bildungszwecken zur Vorbereitung auf die Klassenarbeit und die Zentrale Prüfung 10 (ZP 10) in NRW.</p>
+    <h3>Urheberrecht</h3>
+    <p>Alle Inhalte basieren auf dem Lehrplan NRW. Die Nutzung ist ausschließlich für Schülerinnen und Schüler des Hollenberg-Gymnasiums Waldbröl gestattet.</p>
+    <h3>Haftungsausschluss</h3>
+    <p>Die Inhalte wurden sorgfältig erstellt. Für Richtigkeit und Vollständigkeit kann keine Gewähr übernommen werden. Die App ersetzt nicht den regulären Unterricht.</p>
+  </div>
+</div>
+
+<!-- ═══ SIDEBAR BACKDROP ═══ -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+<!-- HEADER -->
+<header>
+  <div style="display:flex;align-items:center;gap:6px">
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo">Mathe <span>10</span></div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="globalProgress"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="xp-display">⚡ <span id="xpCount">0</span> XP</div>
+    <div class="user-chip" id="userChip" style="display:none">
+      <div class="user-avatar" id="userAvatar"></div>
+      <span class="user-name" id="userName"></span>
+    </div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">Start</div>
+  <div class="nav-item active" data-screen="home" onclick="showScreen('home', this)">
+    <span class="icon">🏠</span> Übersicht
+    <span class="check">✓</span>
+  </div>
+
+  <div class="sidebar-section">Kapitel 1</div>
+  <div class="nav-item" data-screen="k1-theorie" onclick="showScreen('k1-theorie', this)">
+    <span class="icon">📖</span> Wachstumsarten
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k1-rechner" onclick="showScreen('k1-rechner', this)">
+    <span class="icon">🧮</span> Exponentialrechner
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k1-quiz" onclick="showScreen('k1-quiz', this)">
+    <span class="icon">✏️</span> Quiz – Kap. 1
+    <span class="check">✓</span>
+  </div>
+
+  <div class="sidebar-section">Kapitel 2</div>
+  <div class="nav-item" data-screen="k2-theorie" onclick="showScreen('k2-theorie', this)">
+    <span class="icon">📖</span> Exponentialfunktionen
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k2-quiz" onclick="showScreen('k2-quiz', this)">
+    <span class="icon">✏️</span> Quiz – Kap. 2
+    <span class="check">✓</span>
+  </div>
+
+  <div class="sidebar-section">Kapitel 3</div>
+  <div class="nav-item" data-screen="k3-theorie" onclick="showScreen('k3-theorie', this)">
+    <span class="icon">📖</span> Logarithmen
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k3-rechner" onclick="showScreen('k3-rechner', this)">
+    <span class="icon">🧮</span> Logarithmenrechner
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k3-quiz" onclick="showScreen('k3-quiz', this)">
+    <span class="icon">✏️</span> Quiz – Kap. 3
+    <span class="check">✓</span>
+  </div>
+
+  <div class="sidebar-section">Kapitel 4</div>
+  <div class="nav-item" data-screen="k4-theorie" onclick="showScreen('k4-theorie', this)">
+    <span class="icon">📖</span> Modellierung
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="k4-quiz" onclick="showScreen('k4-quiz', this)">
+    <span class="icon">✏️</span> Quiz – Kap. 4
+    <span class="check">✓</span>
+  </div>
+
+  <div class="sidebar-section">Extra</div>
+  <div class="nav-item" data-screen="flashcards" onclick="showScreen('flashcards', this)">
+    <span class="icon">🃏</span> Lernkarten
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="formelsammlung" onclick="showScreen('formelsammlung', this)">
+    <span class="icon">📋</span> Formelsammlung
+    <span class="check">✓</span>
+  </div>
+  <div class="nav-item" data-screen="stats" onclick="showScreen('stats', this)">
+    <span class="icon">📊</span> Mein Fortschritt
+    <span class="check">✓</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="app">
+  <div style="width:260px;flex-shrink:0"></div>
+  <div class="main">
+
+    <!-- ═══ HOME ═══ -->
+    <div class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-badge">MATHEMATIK 10 · HOLLENBERG-GYMNASIUM</div>
+        <h1>Exponentialfunktionen &<br><span class="highlight">Logarithmen</span></h1>
+        <p>Interaktives Lernprogramm zur Vorbereitung auf Klassenarbeit & ZP 10</p>
+        <div class="chapter-grid">
+          <div class="chapter-card" onclick="showScreen('k1-theorie')">
+            <div class="num">KAPITEL 01</div>
+            <h3>Exponentielles Wachstum</h3>
+            <p>Grundformel, Wachstumsfaktor, Wachstumsrate</p>
+          </div>
+          <div class="chapter-card" onclick="showScreen('k2-theorie')">
+            <div class="num">KAPITEL 02</div>
+            <h3>Exponentialfunktionen</h3>
+            <p>f(x) = a·bˣ, Verdopplungszeit, Halbwertszeit</p>
+          </div>
+          <div class="chapter-card" onclick="showScreen('k3-theorie')">
+            <div class="num">KAPITEL 03</div>
+            <h3>Logarithmen</h3>
+            <p>Definition, Taschenrechner, Gleichungen lösen</p>
+          </div>
+          <div class="chapter-card" onclick="showScreen('k4-theorie')">
+            <div class="num">KAPITEL 04</div>
+            <h3>Modellierung</h3>
+            <p>Von Daten zur Modellfunktion, Prognosen</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER (nur auf Übersichtsseite) -->
+      <footer class="app-footer">
+        <span>© 2025 Hollenberg-Gymnasium Waldbröl · Mathematik 10</span>
+        <div class="footer-links">
+          <span class="footer-link" onclick="openLegal('datenschutzModal')">🔒 Datenschutzerklärung</span>
+          <span class="footer-link" onclick="openLegal('impressumModal')">📋 Impressum</span>
+          <span class="footer-link" onclick="doLogout()" style="color:var(--error)">Abmelden</span>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ═══ K1 THEORIE ═══ -->
+    <div class="screen" id="screen-k1-theorie">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 1 · THEORIE</div>
+        <h2>Exponentielles Wachstum und Abnahme</h2>
+      </div>
+
+      <div class="section-tabs">
+        <button class="tab active" onclick="switchTab(this,'k1-tabs','t1a')">Lineares vs. Exp.</button>
+        <button class="tab" onclick="switchTab(this,'k1-tabs','t1b')">Grundformel</button>
+        <button class="tab" onclick="switchTab(this,'k1-tabs','t1c')">Wachstumsfaktor</button>
+        <button class="tab" onclick="switchTab(this,'k1-tabs','t1d')">Beispiele</button>
+      </div>
+
+      <div id="k1-tabs">
+        <div class="tab-content active" id="t1a">
+          <div class="content-block">
+            <div class="block-label">VERGLEICH</div>
+            <h4>Lineares vs. exponentielles Wachstum</h4>
+            <p>Beim <strong class="hl2">linearen Wachstum</strong> wird in jedem Schritt derselbe <strong>Betrag addiert</strong>.<br>
+            Beim <strong class="hl">exponentiellen Wachstum</strong> wird in jedem Schritt mit demselben <strong>Faktor multipliziert</strong>.</p>
+            <table class="comparison-table">
+              <tr><th>Eigenschaft</th><th>Linear</th><th>Exponentiell</th></tr>
+              <tr><td>Was ist konstant?</td><td>Differenzen</td><td>Quotienten</td></tr>
+              <tr><td>Beispiel (Start 100)</td><td>100 → 105 → 110 → 115</td><td>100 → 105 → 110,25 → 115,76</td></tr>
+              <tr><td>Wie prüfen?</td><td>Differenz aufeinanderfolgender Werte</td><td>Quotient aufeinanderfolgender Werte</td></tr>
+              <tr><td>Graph</td><td>Gerade</td><td>Kurve (steigend/fallend)</td></tr>
+            </table>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">ERKENNUNGSREGEL</div>
+            <h4>Wie erkenne ich exponentielles Wachstum?</h4>
+            <p>Bilde die <strong class="hl3">Quotienten</strong> aufeinanderfolgender Werte:</p>
+            <div class="math-box">B(1)/B(0) ,  B(2)/B(1) ,  B(3)/B(2) , ...</div>
+            <p>Sind alle Quotienten <strong class="hl3">gleich (= konstant)</strong>, liegt exponentielles Wachstum vor.</p>
+            <p>Beim linearen Wachstum sind die <strong class="hl2">Differenzen</strong> konstant.</p>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t1b">
+          <div class="content-block formula">
+            <div class="block-label">KERNFORMEL</div>
+            <h4>Die Grundformel des exponentiellen Wachstums</h4>
+            <div class="math-box">B(n) = B(0) · qⁿ</div>
+            <ul class="feature-list">
+              <li><strong class="hl2">B(n)</strong> – Bestand nach n Zeitschritten</li>
+              <li><strong class="hl2">B(0)</strong> – Anfangsbestand (Startwert)</li>
+              <li><strong class="hl2">q</strong> – Wachstumsfaktor</li>
+              <li><strong class="hl2">n</strong> – Anzahl der Zeitschritte</li>
+            </ul>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL</div>
+            <h4>Bevölkerungswachstum</h4>
+            <p>Eine Stadt mit 50 000 Einwohnern wächst jährlich um 2 %.</p>
+            <div class="step-list">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <div class="step-title">Wachstumsfaktor bestimmen</div>
+                  <div class="math">q = 1 + 2/100 = 1,02</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <div class="step-title">Gleichung aufstellen</div>
+                  <div class="math">B(n) = 50 000 · 1,02ⁿ</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <div class="step-title">Nach 10 Jahren</div>
+                  <div class="math">B(10) = 50 000 · 1,02¹⁰ ≈ 60 950</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <div class="step-title">Nach 25 Jahren</div>
+                  <div class="math">B(25) = 50 000 · 1,02²⁵ ≈ 82 030</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t1c">
+          <div class="content-block formula">
+            <div class="block-label">ZUSAMMENHANG</div>
+            <h4>Wachstumsfaktor q und Wachstumsrate p</h4>
+            <div class="math-box">q = 1 + p/100</div>
+            <div class="zwei-spalten" style="margin-top:16px">
+              <div>
+                <p style="margin-bottom:8px"><strong class="hl3">Wachstum (q > 1):</strong></p>
+                <ul class="feature-list">
+                  <li>Zunahme um p % → q = 1 + p/100</li>
+                  <li>z.B. +5 % → q = 1,05</li>
+                  <li>Verdopplung → q = 2</li>
+                </ul>
+              </div>
+              <div>
+                <p style="margin-bottom:8px"><strong class="hl2">Abnahme (0 &lt; q &lt; 1):</strong></p>
+                <ul class="feature-list">
+                  <li>Abnahme um p % → q = 1 − p/100</li>
+                  <li>z.B. −3 % → q = 0,97</li>
+                  <li>Halbierung → q = 0,5</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – WACHSTUMSFAKTOR BESTIMMEN</div>
+            <h4>Guthaben wächst von 5000 € auf 6077,53 € in 4 Jahren</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Grundformel ansetzen</div><div class="math">5000 · q⁴ = 6077,53</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Dividieren</div><div class="math">q⁴ = 6077,53 / 5000 = 1,2155</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">4. Wurzel ziehen</div><div class="math">q = ⁴√1,2155 ≈ 1,05</div></div></div>
+              <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Wachstumsrate</div><div class="math">p = (1,05 − 1) · 100 = 5 %</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t1d">
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – EXPONENTIELLE ABNAHME</div>
+            <h4>Wertverfall eines Autos</h4>
+            <p>Ein Neuwagen kostet 25 000 €. Sein Wert sinkt jährlich um 12 %.</p>
+            <div class="math-box">B(n) = 25 000 · 0,88ⁿ</div>
+            <table class="value-table">
+              <tr><th class="label-col">Jahr (n)</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+              <tr><td class="label-col">Wert (€)</td><td>25000</td><td>22000</td><td>19360</td><td>17037</td><td>14992</td><td>13193</td><td>11610</td></tr>
+            </table>
+            <p style="margin-top:12px">Nach 5 Jahren: <strong class="hl">B(5) = 25 000 · 0,88⁵ ≈ 13 193,30 €</strong></p>
+          </div>
+          <div class="content-block warning">
+            <div class="block-label">TYPISCHE FEHLER</div>
+            <h4>Achtung!</h4>
+            <ul class="feature-list">
+              <li>Abnahme um 15 % bedeutet q = 0,85 — nicht q = −0,15 und nicht q = 1,15</li>
+              <li>Die Einheit von n beachten: Jahre, Monate oder Tage?</li>
+              <li>Beim Dividieren zweier Gleichungen: a·b⁴/a·b¹ = b³, nicht b⁴</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <button class="btn btn-primary" onclick="showScreen('k1-rechner')">→ Zum Rechner</button>
+        &nbsp;
+        <button class="btn btn-secondary" onclick="showScreen('k1-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K1 RECHNER ═══ -->
+    <div class="screen" id="screen-k1-rechner">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 1 · RECHNER</div>
+        <h2>Exponentialrechner</h2>
+      </div>
+
+      <div class="calculator">
+        <div class="calc-title">Bestand nach n Zeitschritten berechnen</div>
+        <div class="calc-form">
+          <div class="form-group">
+            <label>Startwert B(0)</label>
+            <input type="number" id="r1-b0" value="1000" placeholder="z.B. 1000">
+          </div>
+          <div class="form-group">
+            <label>Wachstum/Abnahme</label>
+            <select id="r1-type">
+              <option value="grow">Wachstum (+)</option>
+              <option value="shrink">Abnahme (−)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Rate p in %</label>
+            <input type="number" id="r1-p" value="5" step="0.1" placeholder="z.B. 5">
+          </div>
+          <div class="form-group">
+            <label>Zeitschritte n</label>
+            <input type="number" id="r1-n" value="10" placeholder="z.B. 10">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcExp()">Berechnen</button>
+        <div class="calc-result" id="r1-result" style="margin-top:16px">Ergebnis erscheint hier...</div>
+      </div>
+
+      <div class="calculator">
+        <div class="calc-title">Wachstumsfaktor aus zwei Werten bestimmen</div>
+        <div class="calc-form">
+          <div class="form-group">
+            <label>Startwert B(0)</label>
+            <input type="number" id="r2-b0" value="5000">
+          </div>
+          <div class="form-group">
+            <label>Endwert B(n)</label>
+            <input type="number" id="r2-bn" value="6077.53">
+          </div>
+          <div class="form-group">
+            <label>Anzahl Schritte n</label>
+            <input type="number" id="r2-n" value="4">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcFactor()">Faktor bestimmen</button>
+        <div class="calc-result" id="r2-result" style="margin-top:16px">Ergebnis erscheint hier...</div>
+      </div>
+
+      <div style="margin-top:16px">
+        <button class="btn btn-primary" onclick="showScreen('k1-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K1 QUIZ ═══ -->
+    <div class="screen" id="screen-k1-quiz">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 1 · QUIZ</div>
+        <h2>Teste dein Wissen</h2>
+      </div>
+      <div id="quiz-k1-container"></div>
+    </div>
+
+    <!-- ═══ K2 THEORIE ═══ -->
+    <div class="screen" id="screen-k2-theorie">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 2 · THEORIE</div>
+        <h2>Exponentialfunktionen</h2>
+      </div>
+
+      <div class="section-tabs">
+        <button class="tab active" onclick="switchTab(this,'k2-tabs','t2a')">Definition</button>
+        <button class="tab" onclick="switchTab(this,'k2-tabs','t2b')">Eigenschaften</button>
+        <button class="tab" onclick="switchTab(this,'k2-tabs','t2c')">Verdoppl./Halbwert</button>
+        <button class="tab" onclick="switchTab(this,'k2-tabs','t2d')">Gleichung aufstellen</button>
+      </div>
+
+      <div id="k2-tabs">
+        <div class="tab-content active" id="t2a">
+          <div class="content-block formula">
+            <div class="block-label">DEFINITION</div>
+            <h4>Die allgemeine Exponentialfunktion</h4>
+            <div class="math-box">f(x) = a · bˣ</div>
+            <ul class="feature-list">
+              <li><strong class="hl">a ≠ 0</strong> – der Anfangswert (y-Achsenabschnitt), denn f(0) = a · b⁰ = a</li>
+              <li><strong class="hl">b > 0, b ≠ 1</strong> – die Basis (Wachstums- bzw. Zerfallsfaktor)</li>
+              <li><strong class="hl3">b > 1</strong> – Graph steigt (exponentielles Wachstum)</li>
+              <li><strong class="hl2">0 &lt; b &lt; 1</strong> – Graph fällt (exponentielle Abnahme)</li>
+            </ul>
+          </div>
+          <div class="chart-container">
+            <div class="block-label" style="margin-bottom:12px;font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase">GRAPHENVERGLEICH</div>
+            <canvas id="expChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t2b">
+          <div class="content-block">
+            <div class="block-label">EIGENSCHAFTEN</div>
+            <h4>Wichtige Eigenschaften von f(x) = a · bˣ (a > 0)</h4>
+            <ul class="feature-list">
+              <li>Für x kann jede beliebige Zahl eingesetzt werden (auch negative und Dezimalzahlen)</li>
+              <li>Die Funktionswerte sind immer <strong class="hl3">positiv</strong> – der Graph liegt immer oberhalb der x-Achse</li>
+              <li>Der Graph <strong class="hl2">berührt die x-Achse nie</strong>, er nähert sich ihr nur immer weiter an</li>
+              <li>Der y-Achsenabschnitt ist immer der Punkt <strong class="hl">(0 | a)</strong></li>
+              <li>Es gibt <strong class="hl2">keine Nullstelle</strong> (der Graph schneidet die x-Achse nicht)</li>
+            </ul>
+          </div>
+          <div class="zwei-spalten">
+            <div class="content-block example">
+              <div class="block-label">WACHSTUM</div>
+              <h4>b > 1 → steigend</h4>
+              <p>Beispiele: f(x) = 2ˣ, g(x) = 3ˣ, h(x) = 1,5ˣ</p>
+              <div class="math-box">y-Achse: Punkt (0 | a)</div>
+            </div>
+            <div class="content-block warning">
+              <div class="block-label">ABNAHME</div>
+              <h4>0 &lt; b &lt; 1 → fallend</h4>
+              <p>Beispiele: g(x) = 0,5ˣ, k(x) = 0,8ˣ</p>
+              <div class="math-box">Halbwertszeit berechenbar</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t2c">
+          <div class="content-block formula">
+            <div class="block-label">VERDOPPLUNGSZEIT & HALBWERTSZEIT</div>
+            <h4>Definition</h4>
+            <div class="zwei-spalten">
+              <div>
+                <p style="margin-bottom:8px"><strong class="hl3">Verdopplungszeit:</strong></p>
+                <p>Zeitspanne, in der sich der Bestand <strong>verdoppelt</strong>.</p>
+                <div class="math-box" style="margin-top:10px">qⁿ = 2 → n = log_q(2)</div>
+              </div>
+              <div>
+                <p style="margin-bottom:8px"><strong class="hl2">Halbwertszeit:</strong></p>
+                <p>Zeitspanne, in der sich der Bestand <strong>halbiert</strong>.</p>
+                <div class="math-box" style="margin-top:10px">qⁿ = 0,5 → n = log_q(0,5)</div>
+              </div>
+            </div>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – VERDOPPLUNGSZEIT ABLESEN</div>
+            <h4>f(x) = 100 · 1,1ˣ (Wachstum um 10 % pro Schritt)</h4>
+            <table class="value-table">
+              <tr><th>x</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+              <tr><td class="label-col">f(x)</td><td>100</td><td>110</td><td>121</td><td>133</td><td>146</td><td>161</td><td>177</td><td>195</td></tr>
+            </table>
+            <p style="margin-top:12px">Der Wert 200 wird zwischen x = 7 und x = 8 erreicht → Verdopplungszeit <strong class="hl">≈ 7,3 Schritte</strong></p>
+            <p style="color:var(--muted);font-size:0.85rem;margin-top:8px">(Genau berechnen mit Logarithmen: n = log₁,₁(2) ≈ 7,27)</p>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t2d">
+          <div class="content-block formula">
+            <div class="block-label">VORGEHEN</div>
+            <h4>Exponentialfunktion durch zwei Punkte aufstellen</h4>
+            <ul class="feature-list">
+              <li>Beide Punkte in f(x) = a · bˣ einsetzen → zwei Gleichungen</li>
+              <li>Gleichungen <strong class="hl">durcheinander dividieren</strong> → a fällt weg</li>
+              <li>b berechnen (Wurzel ziehen)</li>
+              <li>b einsetzen → a berechnen</li>
+              <li>Probe mit dem anderen Punkt</li>
+            </ul>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – SONDERFALL: PUNKT (0 | y₀)</div>
+            <h4>P(0 | 5) und Q(3 | 40)</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">P liegt auf y-Achse → sofort a = 5</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Q einsetzen</div><div class="math">5 · b³ = 40 → b³ = 8 → b = ³√8 = 2</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ergebnis</div><div class="math">f(x) = 5 · 2ˣ</div></div></div>
+            </div>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – ZWEI BELIEBIGE PUNKTE</div>
+            <h4>P(1 | 6) und Q(4 | 48)</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Gleichungssystem</div><div class="math">(I) a · b¹ = 6 &nbsp;&nbsp; (II) a · b⁴ = 48</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Dividieren (II):(I)</div><div class="math">b³ = 48/6 = 8 → b = 2</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">a in (I) einsetzen</div><div class="math">a · 2 = 6 → a = 3</div></div></div>
+              <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Ergebnis</div><div class="math">f(x) = 3 · 2ˣ</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <button class="btn btn-primary" onclick="showScreen('k2-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K2 QUIZ ═══ -->
+    <div class="screen" id="screen-k2-quiz">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 2 · QUIZ</div>
+        <h2>Exponentialfunktionen – Quiz</h2>
+      </div>
+      <div id="quiz-k2-container"></div>
+    </div>
+
+    <!-- ═══ K3 THEORIE ═══ -->
+    <div class="screen" id="screen-k3-theorie">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 3 · THEORIE</div>
+        <h2>Logarithmen & Exponentialgleichungen</h2>
+      </div>
+
+      <div class="section-tabs">
+        <button class="tab active" onclick="switchTab(this,'k3-tabs','t3a')">Was ist ein Logarithmus?</button>
+        <button class="tab" onclick="switchTab(this,'k3-tabs','t3b')">Taschenrechner</button>
+        <button class="tab" onclick="switchTab(this,'k3-tabs','t3c')">Gleichungen lösen</button>
+        <button class="tab" onclick="switchTab(this,'k3-tabs','t3d')">Beispiele</button>
+      </div>
+
+      <div id="k3-tabs">
+        <div class="tab-content active" id="t3a">
+          <div class="content-block formula">
+            <div class="block-label">DEFINITION</div>
+            <h4>Was ist ein Logarithmus?</h4>
+            <p>Der Logarithmus ist die <strong class="hl">Umkehrung des Potenzierens</strong>.</p>
+            <div class="math-box">bʸ = x  ⟺  y = log_b(x)</div>
+            <p style="margin-top:12px"><strong class="hl4">Eselsbrücke:</strong> „log_b(x): b hoch <em>was</em> ergibt x?"</p>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">UMRECHNUNG</div>
+            <table class="comparison-table">
+              <tr><th>Potenzschreibweise</th><th>Logarithmusschreibweise</th></tr>
+              <tr><td>2³ = 8</td><td>log₂(8) = 3</td></tr>
+              <tr><td>10² = 100</td><td>log₁₀(100) = 2</td></tr>
+              <tr><td>5³ = 125</td><td>log₅(125) = 3</td></tr>
+              <tr><td>3⁴ = 81</td><td>log₃(81) = 4</td></tr>
+              <tr><td>b⁰ = 1</td><td>log_b(1) = 0 (immer!)</td></tr>
+            </table>
+          </div>
+          <div class="content-block">
+            <div class="block-label">KOPFRECHNEN ÜBEN</div>
+            <h4>Logarithmen im Kopf berechnen</h4>
+            <ul class="feature-list">
+              <li>log₂(16) = ? → 2 hoch was ergibt 16? → 2⁴=16 → <strong class="hl">4</strong></li>
+              <li>log₃(27) = ? → 3 hoch was ergibt 27? → 3³=27 → <strong class="hl">3</strong></li>
+              <li>log₁₀(1000) = ? → 10³=1000 → <strong class="hl">3</strong></li>
+              <li>log₅(1) = ? → 5⁰=1 → <strong class="hl">0</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t3b">
+          <div class="content-block formula">
+            <div class="block-label">TASCHENRECHNER</div>
+            <h4>Logarithmen mit dem TR berechnen</h4>
+            <p>Wenn auf dem Taschenrechner nur <strong class="hl">log(x)</strong> ohne Basis steht, ist damit der <strong class="hl3">Zehnerlogarithmus log₁₀(x)</strong> gemeint.</p>
+            <div class="divider"></div>
+            <p><strong class="hl2">Umrechnungsformel</strong> (falls kein log_b-Taste vorhanden):</p>
+            <div class="math-box">log_b(x) = log(x) / log(b)</div>
+            <p style="margin-top:12px">Beispiel: log₃(50) = log(50) / log(3) = 1,699 / 0,477 ≈ 3,561</p>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">PROBE</div>
+            <p>Probe für log₃(50) ≈ 3,561: Gilt 3^3,561 ≈ 50? → Ja! ✓</p>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t3c">
+          <div class="content-block formula">
+            <div class="block-label">EXPONENTIALGLEICHUNGEN LÖSEN</div>
+            <h4>So geht's: bˣ = c lösen</h4>
+            <div class="math-box">bˣ = c  ⟹  x = log_b(c)</div>
+            <div class="divider"></div>
+            <h4>Vorgehen bei komplexeren Gleichungen</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Vorfaktor wegdividieren (falls vorhanden)</div><div class="math">500 · 1,08ˣ = 1200 | ÷ 500 → 1,08ˣ = 2,4</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Logarithmus anwenden</div><div class="math">x = log₁,₀₈(2,4)</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Mit Taschenrechner</div><div class="math">x = log(2,4)/log(1,08) ≈ 11,38</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="t3d">
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – VERDOPPLUNGSZEIT</div>
+            <h4>Guthaben wächst 5 % jährlich – wann verdoppelt es sich?</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Gleichung</div><div class="math">B(0) · 1,05ⁿ = 2 · B(0)</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">B(0) kürzen</div><div class="math">1,05ⁿ = 2</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Logarithmus</div><div class="math">n = log₁,₀₅(2) ≈ 14,21 Jahre</div></div></div>
+            </div>
+          </div>
+          <div class="content-block example">
+            <div class="block-label">BEISPIEL – HALBWERTSZEIT</div>
+            <h4>Radioaktives Material zerfällt 3,5 % jährlich</h4>
+            <div class="step-list">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Wachstumsfaktor</div><div class="math">q = 1 − 0,035 = 0,965</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Halbwertszeit-Gleichung</div><div class="math">0,965ⁿ = 0,5</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Logarithmus</div><div class="math">n = log₀,₉₆₅(0,5) ≈ 19,46 Jahre</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px">
+        <button class="btn btn-primary" onclick="showScreen('k3-rechner')">→ Zum Logarithmenrechner</button>
+        &nbsp;
+        <button class="btn btn-secondary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K3 RECHNER ═══ -->
+    <div class="screen" id="screen-k3-rechner">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 3 · RECHNER</div>
+        <h2>Logarithmen & Exponentialgleichungen lösen</h2>
+      </div>
+
+      <div class="calculator">
+        <div class="calc-title">Logarithmus berechnen</div>
+        <div class="calc-form">
+          <div class="form-group">
+            <label>Basis b</label>
+            <input type="number" id="log-b" value="2" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Argument x</label>
+            <input type="number" id="log-x" value="32" step="0.01">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcLog()">Berechnen</button>
+        <div class="calc-result" id="log-result" style="margin-top:16px">Ergebnis erscheint hier...</div>
+      </div>
+
+      <div class="calculator">
+        <div class="calc-title">Exponentialgleichung lösen: a · bˣ = c</div>
+        <div class="calc-form">
+          <div class="form-group">
+            <label>Vorfaktor a</label>
+            <input type="number" id="eq-a" value="500">
+          </div>
+          <div class="form-group">
+            <label>Basis b</label>
+            <input type="number" id="eq-b" value="1.08" step="0.001">
+          </div>
+          <div class="form-group">
+            <label>Ergebnis c</label>
+            <input type="number" id="eq-c" value="1200">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="solveEq()">Gleichung lösen</button>
+        <div class="calc-result" id="eq-result" style="margin-top:16px">Ergebnis erscheint hier...</div>
+      </div>
+
+      <div class="calculator">
+        <div class="calc-title">Verdopplungszeit / Halbwertszeit berechnen</div>
+        <div class="calc-form">
+          <div class="form-group">
+            <label>Typ</label>
+            <select id="vhw-type">
+              <option value="double">Verdopplungszeit</option>
+              <option value="half">Halbwertszeit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Wachstumsrate p in %</label>
+            <input type="number" id="vhw-p" value="5" step="0.1">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcVHW()">Berechnen</button>
+        <div class="calc-result" id="vhw-result" style="margin-top:16px">Ergebnis erscheint hier...</div>
+      </div>
+
+      <div style="margin-top:16px">
+        <button class="btn btn-primary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K3 QUIZ ═══ -->
+    <div class="screen" id="screen-k3-quiz">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 3 · QUIZ</div>
+        <h2>Logarithmen – Quiz</h2>
+      </div>
+      <div id="quiz-k3-container"></div>
+    </div>
+
+    <!-- ═══ K4 THEORIE ═══ -->
+    <div class="screen" id="screen-k4-theorie">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 4 · THEORIE</div>
+        <h2>Wachstumsprozesse modellieren</h2>
+      </div>
+
+      <div class="content-block formula">
+        <div class="block-label">VORGEHEN</div>
+        <h4>Von Daten zur Modellfunktion</h4>
+        <div class="step-list">
+          <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Daten analysieren</div><p>Differenzen und Quotienten aufeinanderfolgender Werte bilden.</p></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Wachstumsart bestimmen</div>
+            <div class="math">Konstante Differenzen → lineares Modell: f(x) = mx + b</div>
+            <div class="math">Konstante Quotienten → exponentielles Modell: f(x) = a · bˣ</div>
+          </div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Gleichung aufstellen</div><p>Parameter a und b (bzw. m und b) bestimmen.</p></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Modell überprüfen</div><p>Stimmen die berechneten Werte mit den Daten überein?</p></div></div>
+          <div class="step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Prognosen erstellen</div><p>Gleichung für Vorhersagen nutzen.</p></div></div>
+        </div>
+      </div>
+
+      <div class="content-block example">
+        <div class="block-label">BEISPIEL – PFLANZENWACHSTUM</div>
+        <h4>Modellierung aus einer Wertetabelle</h4>
+        <table class="value-table">
+          <tr><th>Tage x</th><th>0</th><th>50</th><th>100</th><th>150</th><th>200</th></tr>
+          <tr><td class="label-col">Höhe cm</td><td>1,2</td><td>2,0</td><td>3,2</td><td>5,3</td><td>8,7</td></tr>
+        </table>
+        <div class="step-list" style="margin-top:16px">
+          <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Quotienten bilden</div><div class="math">2,0/1,2 ≈ 1,67 · 3,2/2,0 = 1,60 · 5,3/3,2 ≈ 1,66 → annähernd konstant ≈ 1,64</div><p>→ exponentielles Wachstum</p></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Gleichung aufstellen</div><div class="math">a = f(0) = 1,2 · b = 1,64^(1/50) ≈ 1,0099</div><div class="math">f(x) = 1,2 · 1,0099ˣ</div></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Prognose für x = 230</div><div class="math">f(230) = 1,2 · 1,0099²³⁰ ≈ 11,7 cm</div></div></div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <div class="block-label">MODELLVERGLEICH</div>
+        <h4>Lineares vs. exponentielles Modell (Schal-Beispiel)</h4>
+        <p>Schal ist 70 cm lang, 6 % täglich dazu:</p>
+        <table class="comparison-table" style="margin-top:12px">
+          <tr><th>Tage</th><th>f(x) linear = 4,2x + 70</th><th>g(x) exp. = 70 · 1,06ˣ</th></tr>
+          <tr><td>0</td><td>70</td><td>70</td></tr>
+          <tr><td>10</td><td>112</td><td>125,4</td></tr>
+          <tr><td>20</td><td>154</td><td>224,5</td></tr>
+          <tr><td>30</td><td>196</td><td>402,2</td></tr>
+        </table>
+        <p style="margin-top:12px;color:var(--muted)">Das exponentielle Modell wächst langfristig viel schneller!</p>
+      </div>
+
+      <div class="content-block warning">
+        <div class="block-label">ZP-TYPISCHE AUFGABE</div>
+        <h4>Covid-19 Beispiel (Aufgabe 20)</h4>
+        <p>23. Januar 2020: 581 Fälle. Verdopplung alle 2,5 Tage.</p>
+        <div class="step-list">
+          <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Basis bestimmen</div><div class="math">b = 2^(1/2,5) = 2^0,4 ≈ 1,32</div></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Gleichung</div><div class="math">f(t) = 581 · 1,32ᵗ</div></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Nach 10 Tagen</div><div class="math">f(10) = 581 · 1,32¹⁰ ≈ 9 331</div></div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Wann 100 000 Fälle?</div><div class="math">t = log₁,₃₂(100000/581) ≈ 18,5 Tage</div></div></div>
+        </div>
+        <p style="margin-top:12px;font-size:0.88rem">Ein exponentielles Modell beschreibt nur den <strong class="hl2">Anfang</strong> realistisch, weil in der Realität begrenzende Faktoren einsetzen (Maßnahmen, Immunität, begrenzte Bevölkerung).</p>
+      </div>
+
+      <div style="margin-top:24px">
+        <button class="btn btn-primary" onclick="showScreen('k4-quiz')">Zum Quiz ✏️</button>
+      </div>
+    </div>
+
+    <!-- ═══ K4 QUIZ ═══ -->
+    <div class="screen" id="screen-k4-quiz">
+      <div class="lesson-header">
+        <div class="tag">KAPITEL 4 · QUIZ</div>
+        <h2>Modellierung – Quiz</h2>
+      </div>
+      <div id="quiz-k4-container"></div>
+    </div>
+
+    <!-- ═══ FLASHCARDS ═══ -->
+    <div class="screen" id="screen-flashcards">
+      <div class="lesson-header">
+        <div class="tag">EXTRA</div>
+        <h2>Lernkarten</h2>
+      </div>
+      <p style="color:var(--muted);margin-bottom:24px">Klicke auf die Karte, um die Antwort zu sehen.</p>
+
+      <div class="flashcard-wrap">
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="card-face card-front">
+            <div class="hint">FRAGE — klicken zum Umdrehen</div>
+            <div class="term" id="fc-term">–</div>
+            <div class="definition" id="fc-hint" style="color:var(--muted)"></div>
+          </div>
+          <div class="card-face card-back">
+            <div class="hint">ANTWORT</div>
+            <div class="math-expr" id="fc-formula"></div>
+            <div class="definition" id="fc-answer"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard-nav">
+        <button class="btn btn-secondary" onclick="prevCard()">← Zurück</button>
+        <div class="card-counter"><span id="fc-current">1</span> / <span id="fc-total">1</span></div>
+        <button class="btn btn-secondary" onclick="nextCard()">Weiter →</button>
+      </div>
+    </div>
+
+    <!-- ═══ FORMELSAMMLUNG ═══ -->
+    <div class="screen" id="screen-formelsammlung">
+      <div class="lesson-header">
+        <div class="tag">EXTRA</div>
+        <h2>Formelsammlung</h2>
+      </div>
+
+      <div class="formula-grid">
+        <div class="formula-item">
+          <div class="desc"><strong>Exponentielles Wachstum</strong><br>Bestand nach n Schritten</div>
+          <div class="expr">B(n) = B(0) · qⁿ</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Wachstumsfaktor</strong><br>aus Wachstumsrate p (in %)</div>
+          <div class="expr">q = 1 + p/100</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Wachstumsrate</strong><br>aus Wachstumsfaktor q</div>
+          <div class="expr">p = (q − 1) · 100</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Exponentialfunktion</strong><br>allgemeine Form</div>
+          <div class="expr">f(x) = a · bˣ</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Definition Logarithmus</strong><br>Umkehrung der Potenz</div>
+          <div class="expr">bʸ = x ⟺ y = log_b(x)</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Exponentialgleichung lösen</strong></div>
+          <div class="expr">bˣ = c ⟹ x = log_b(c)</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Verdopplungszeit</strong><br>nach n Schritten verdoppelt</div>
+          <div class="expr">qⁿ = 2 → n = log_q(2)</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Halbwertszeit</strong><br>nach n Schritten halbiert</div>
+          <div class="expr">qⁿ = 0,5 → n = log_q(0,5)</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Basiswechsel</strong><br>für Taschenrechner</div>
+          <div class="expr">log_b(x) = log(x) / log(b)</div>
+        </div>
+        <div class="formula-item">
+          <div class="desc"><strong>Wachstumsfaktor bestimmen</strong><br>aus B(0) und B(n)</div>
+          <div class="expr">q = ⁿ√(B(n)/B(0))</div>
+        </div>
+      </div>
+
+      <div class="content-block warning" style="margin-top:24px">
+        <div class="block-label">TYPISCHE FEHLER</div>
+        <ul class="feature-list">
+          <li>Abnahme um 15 % → q = <strong class="hl3">0,85</strong>, nicht q = −0,15</li>
+          <li>log_b(x) fragt: „b hoch <em>was</em> ergibt x?" – nicht log(b) · log(x)!</li>
+          <li>Beim Dividieren: a·b⁴ / a·b¹ = b³, <strong class="hl2">nicht b⁴</strong></li>
+          <li>f(x) = a·bˣ hat <strong class="hl2">keine Nullstelle</strong> (für a > 0)</li>
+          <li>Verdopplungszeit ist unabhängig vom Startwert!</li>
+          <li>Einheit von n beachten: Jahre, Monate, Tage?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══ STATS ═══ -->
+    <div class="screen" id="screen-stats">
+      <div class="lesson-header">
+        <div class="tag">FORTSCHRITT</div>
+        <h2>Mein Lernfortschritt</h2>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-xp">0</div>
+          <div class="stat-label">XP gesammelt</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-correct">0</div>
+          <div class="stat-label">Richtige Antworten</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-quizzes">0</div>
+          <div class="stat-label">Abgeschlossene Quizze</div>
+        </div>
+      </div>
+
+      <div class="content-block" id="stat-achievements">
+        <div class="block-label">ABZEICHEN</div>
+        <h4>Deine Erfolge</h4>
+        <div id="ach-list" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIG – Admin-Passwort (für Produktion in Backend verlagern)
+// ══════════════════════════════════════════════════════
+const ADMIN_PASSWORD = 'mathe2025admin';
+const STORAGE_EMAILS = 'allowedEmails';
+const STORAGE_PROGRESS = 'mathProgress';
+const STORAGE_USER = 'currentUser';
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let state = {
+  xp: 0,
+  correctAnswers: 0,
+  quizzesCompleted: 0,
+  completedScreens: [],
+  quizScores: {}
+};
+
+// ══════════════════════════════════════════════════════
+// LOGIN / AUTH
+// ══════════════════════════════════════════════════════
+function getAllowedEmails() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_EMAILS) || '[]'); } catch { return []; }
+}
+
+function isEmailAllowed(email) {
+  const list = getAllowedEmails();
+  if (list.length === 0) return false; // Keine Freischaltung → kein Zugang
+  return list.map(e => e.toLowerCase().trim()).includes(email.toLowerCase().trim());
+}
+
+// ══════════════════════════════════════════════════════
+// MICROSOFT LOGIN (MSAL)
+// ══════════════════════════════════════════════════════
+// ⚠️  KONFIGURATION: Trage hier die Azure-App-Daten ein.
+//     Azure Portal → App-Registrierungen → Deine App
+const MSAL_CONFIG = {
+  clientId: 'DEINE-CLIENT-ID',          // Application (client) ID
+  tenantId: 'DEINE-TENANT-ID',          // z.B. "common" oder spezifische Tenant-ID
+  redirectUri: window.location.href.split('?')[0]  // aktuelle URL ohne Query-Parameter
+};
+
+let msalInstance = null;
+
+function getMsal() {
+  if (msalInstance) return msalInstance;
+  try {
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: MSAL_CONFIG.clientId,
+        authority: `https://login.microsoftonline.com/${MSAL_CONFIG.tenantId}`,
+        redirectUri: MSAL_CONFIG.redirectUri,
+      },
+      cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
+    });
+  } catch(e) {
+    showToast('MSAL konnte nicht geladen werden', 'error');
+    return null;
+  }
+  return msalInstance;
+}
+
+async function doMicrosoftLogin() {
+  // Prüfen ob Client-ID konfiguriert ist
+  if (MSAL_CONFIG.clientId === 'DEINE-CLIENT-ID') {
+    showMsalSetupHint();
+    return;
+  }
+
+  const msal = getMsal();
+  if (!msal) return;
+
+  const msBtn = document.querySelector('.ms-btn');
+  msBtn.disabled = true;
+  msBtn.textContent = 'Verbinde mit Microsoft…';
+
+  try {
+    // Erst prüfen ob bereits ein Account eingeloggt ist
+    await msal.initialize();
+    const accounts = msal.getAllAccounts();
+
+    let result;
+    if (accounts.length > 0) {
+      // Silent Token holen
+      result = await msal.acquireTokenSilent({
+        scopes: ['User.Read'],
+        account: accounts[0]
+      }).catch(() => null);
+    }
+
+    if (!result) {
+      // Popup-Login
+      result = await msal.loginPopup({
+        scopes: ['User.Read', 'openid', 'profile', 'email'],
+        prompt: 'select_account'
+      });
+    }
+
+    const email = result.account.username;
+    const name  = result.account.name || email.split('@')[0];
+
+    document.getElementById('login-error').style.display = 'none';
+
+    if (!isEmailAllowed(email)) {
+      document.getElementById('login-error').textContent =
+        `⛔ ${email} ist nicht freigeschalten. Wende dich an deinen Lehrer.`;
+      document.getElementById('login-error').style.display = 'block';
+      msBtn.disabled = false;
+      msBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg> Mit Microsoft anmelden`;
+      return;
+    }
+
+    completeLogin(email, name);
+
+  } catch (err) {
+    console.error('MSAL Fehler:', err);
+    if (err.errorCode !== 'user_cancelled') {
+      showToast('Login fehlgeschlagen: ' + (err.errorMessage || err.message || 'Unbekannter Fehler'), 'error');
+    }
+    msBtn.disabled = false;
+    msBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#F25022"/><rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/><rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg> Mit Microsoft anmelden`;
+  }
+}
+
+function showMsalSetupHint() {
+  // Zeigt dem Admin eine Anleitung, wenn MSAL noch nicht konfiguriert ist
+  document.getElementById('adminPwModal').classList.remove('show');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-backdrop show';
+  overlay.innerHTML = `
+    <div class="modal-box" style="max-width:540px">
+      <h3>⚙️ Microsoft-Login einrichten</h3>
+      <p style="color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:16px">
+        Um den echten Microsoft-Login zu aktivieren, muss die App im
+        <strong style="color:var(--text)">Azure Active Directory</strong> registriert werden:
+      </p>
+      <ol style="color:#c0c0d8;font-size:.85rem;line-height:2;padding-left:18px">
+        <li>portal.azure.com → <em>App-Registrierungen</em> → <em>Neue Registrierung</em></li>
+        <li>Name: <code style="color:var(--accent3)">Mathe10-Lernapp</code></li>
+        <li>Kontotypen: <em>Nur diese Organisation</em> (oder Multitenant)</li>
+        <li>Redirect-URI: <code style="color:var(--accent3);font-size:.78rem;word-break:break-all">${window.location.href.split('?')[0]}</code></li>
+        <li>Nach der Registrierung: <em>Anwendungs-ID</em> und <em>Verzeichnis-ID</em> kopieren</li>
+        <li>In dieser Datei eintragen:<br>
+          <code style="color:var(--accent4);font-size:.78rem">clientId: 'DEINE-CLIENT-ID'</code><br>
+          <code style="color:var(--accent4);font-size:.78rem">tenantId: 'DEINE-TENANT-ID'</code>
+        </li>
+      </ol>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:12px">
+        Bis dahin: Admin-Zugang → Schüler-E-Mails freischalten → Schüler können sich mit ihrem Schulkonto anmelden.
+      </p>
+      <div class="modal-actions" style="margin-top:16px">
+        <button class="btn btn-secondary" onclick="this.closest('.modal-backdrop').remove()">Schließen</button>
+        <button class="btn btn-primary" onclick="this.closest('.modal-backdrop').remove(); openAdminLogin()">Admin-Panel öffnen</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function completeLogin(email, name) {
+  localStorage.setItem(STORAGE_USER, JSON.stringify({ email, name }));
+  loadProgress(email);
+
+  // User-Chip befüllen
+  const initials = name.split(/[\s._-]/).map(p => p[0]?.toUpperCase() || '').join('').slice(0,2) || '?';
+  document.getElementById('userAvatar').textContent = initials;
+  document.getElementById('userName').textContent = name;
+  document.getElementById('userChip').style.display = 'flex';
+
+  document.getElementById('login-overlay').style.display = 'none';
+}
+
+function doLogout() {
+  if (!confirm('Wirklich abmelden? Dein Fortschritt bleibt gespeichert.')) return;
+  localStorage.removeItem(STORAGE_USER);
+  // MSAL-Session beenden falls aktiv
+  if (msalInstance) {
+    try {
+      msalInstance.logoutPopup().catch(() => {});
+    } catch(e) {}
+  }
+  location.reload();
+}
+
+function loadProgress(email) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_PROGRESS + '_' + email) || 'null');
+    if (saved) {
+      state = { ...state, ...saved };
+      state.completedScreens = saved.completedScreens || [];
+      document.getElementById('xpCount').textContent = state.xp;
+      const pct = Math.min(100, (state.xp / 600) * 100);
+      document.getElementById('globalProgress').style.width = pct + '%';
+      // Restore nav done-states
+      state.completedScreens.forEach(id => markNavDone(id));
+    }
+  } catch {}
+}
+
+function saveProgress() {
+  try {
+    const u = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
+    if (u) localStorage.setItem(STORAGE_PROGRESS + '_' + u.email, JSON.stringify(state));
+  } catch {}
+}
+
+// ══════════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════════
+function openAdminLogin() {
+  document.getElementById('adminPwInput').value = '';
+  document.getElementById('adminPwErr').style.display = 'none';
+  document.getElementById('adminPwModal').classList.add('show');
+}
+
+function checkAdminPw() {
+  const pw = document.getElementById('adminPwInput').value;
+  if (pw === ADMIN_PASSWORD) {
+    closeModal('adminPwModal');
+    openAdminPanel();
+  } else {
+    document.getElementById('adminPwErr').style.display = 'block';
+  }
+}
+
+function openAdminPanel() {
+  renderEmailChips();
+  document.getElementById('newEmailsInput').value = '';
+  document.getElementById('adminPanel').classList.add('show');
+}
+
+function renderEmailChips() {
+  const emails = getAllowedEmails();
+  const container = document.getElementById('emailChips');
+  if (emails.length === 0) {
+    container.innerHTML = '<span style="color:var(--muted);font-size:.8rem;font-family:var(--mono)">Noch keine Adressen freigeschalten</span>';
+    return;
+  }
+  container.innerHTML = emails.map(e => `
+    <div class="email-chip">${e}
+      <span class="chip-del" onclick="removeEmail('${e}')">✕</span>
+    </div>`).join('');
+}
+
+function removeEmail(email) {
+  const emails = getAllowedEmails().filter(e => e !== email);
+  localStorage.setItem(STORAGE_EMAILS, JSON.stringify(emails));
+  renderEmailChips();
+}
+
+function clearAllEmails() {
+  if (!confirm('Wirklich alle E-Mail-Adressen löschen?')) return;
+  localStorage.setItem(STORAGE_EMAILS, JSON.stringify([]));
+  renderEmailChips();
+}
+
+function saveEmails() {
+  const raw = document.getElementById('newEmailsInput').value;
+  const newEmails = raw.split(/[\n,;]+/).map(e => e.trim().toLowerCase()).filter(e => e.includes('@'));
+  const existing = getAllowedEmails();
+  const merged = [...new Set([...existing, ...newEmails])];
+  localStorage.setItem(STORAGE_EMAILS, JSON.stringify(merged));
+  document.getElementById('newEmailsInput').value = '';
+  renderEmailChips();
+  showToast(`✅ ${newEmails.length} Adresse(n) gespeichert`, 'success');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
+// LEGAL MODALS
+// ══════════════════════════════════════════════════════
+function openLegal(id) {
+  document.getElementById(id).classList.add('show');
+  document.getElementById(id).scrollTop = 0;
+}
+function closeLegal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ══════════════════════════════════════════════════════
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const btn = document.getElementById('hamburgerBtn');
+  const isOpen = sidebar.classList.contains('mobile-open');
+  if (isOpen) closeSidebar();
+  else {
+    sidebar.classList.add('mobile-open');
+    backdrop.classList.add('show');
+    btn.classList.add('open');
+  }
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarBackdrop').classList.remove('show');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════════════
+// TIP TOGGLE
+// ══════════════════════════════════════════════════════
+function toggleTip(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.tip-arrow');
+  const label = header.querySelector('.tip-toggle-label');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+  label.textContent = isOpen ? '💡 TIPP — Anklicken zum Einblenden' : '💡 TIPP — Anklicken zum Ausblenden';
+}
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function showScreen(id, navEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = navEl || document.querySelector(`[data-screen="${id}"]`);
+  if (nav) nav.classList.add('active');
+
+  if (id === 'k1-quiz') initQuiz('k1');
+  if (id === 'k2-quiz') initQuiz('k2');
+  if (id === 'k3-quiz') initQuiz('k3');
+  if (id === 'k4-quiz') initQuiz('k4');
+  if (id === 'flashcards') initFlashcards();
+  if (id === 'stats') updateStats();
+  if (id === 'k2-theorie') initChart();
+
+  if (!state.completedScreens.includes(id)) state.completedScreens.push(id);
+  saveProgress();
+
+  // Close mobile sidebar on nav
+  if (window.innerWidth <= 768) closeSidebar();
+}
+
+function switchTab(btn, groupId, targetId) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+  btn.closest('.section-tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
+// QUIZ DATA
+// ══════════════════════════════════════════════════════
+const quizData = {
+  k1: [
+    { q: 'Welche Folge zeigt exponentielles Wachstum?', hint: 'Prüfe die Quotienten aufeinanderfolgender Werte.', options: ['100 → 110 → 120 → 130', '100 → 110 → 121 → 133,1', '100 → 150 → 200 → 250', '100 → 90 → 80 → 70'], answer: 1, explanation: 'Quotienten: 110/100 = 1,1 ; 121/110 = 1,1 → konstant → exponentielles Wachstum mit q = 1,1.' },
+    { q: 'Was ist der Wachstumsfaktor q bei einer Zunahme um 8 %?', hint: 'q = 1 + p/100', options: ['q = 0,08', 'q = 8', 'q = 1,08', 'q = 0,92'], answer: 2, explanation: 'q = 1 + 8/100 = 1,08. Bei Wachstum ist q > 1.' },
+    { q: 'Ein Guthaben startet bei 2000 €, wächst um 5 % jährlich. Wie viel nach 3 Jahren?', hint: 'B(3) = 2000 · 1,05³', options: ['2 300 €', '2 310,13 €', '2 315,25 €', '2 100 €'], answer: 2, explanation: 'B(3) = 2000 · 1,05³ = 2000 · 1,157625 = 2315,25 €' },
+    { q: 'Ein Auto verliert jährlich 15 % seines Wertes. Welcher Faktor gilt?', hint: 'Bei Abnahme: q = 1 − p/100', options: ['q = 1,15', 'q = −0,15', 'q = 0,85', 'q = 0,15'], answer: 2, explanation: 'Abnahme um 15 % → q = 1 − 15/100 = 0,85.' },
+    { q: 'Was ist der Wachstumsfaktor bei Halbierung?', hint: 'Denke: der Wert wird halb so groß.', options: ['q = −0,5', 'q = 2', 'q = 0,5', 'q = 0,25'], answer: 2, explanation: 'Halbierung bedeutet der neue Wert ist 0,5 × der alte → q = 0,5.' },
+    { q: 'Eine Bakterienkultur startet mit 200 und verdoppelt sich alle 30 Minuten. Wie viele nach 3 Stunden?', hint: '3 Stunden = 6 Intervalle à 30 Minuten.', options: ['6 400', '12 800', '51 200', '3 200'], answer: 1, explanation: 'B(6) = 200 · 2⁶ = 200 · 64 = 12 800 Bakterien.' }
+  ],
+  k2: [
+    { q: 'Was gibt der Parameter a in f(x) = a · bˣ an?', hint: 'Setze x = 0 ein.', options: ['Die Steigung', 'Den y-Achsenabschnitt', 'Den Wachstumsfaktor', 'Die Nullstelle'], answer: 1, explanation: 'f(0) = a · b⁰ = a · 1 = a. a ist der Anfangswert / y-Achsenabschnitt.' },
+    { q: 'Bestimme die Gleichung durch P(0 | 4) und Q(2 | 36).', hint: 'Da P auf der y-Achse liegt, ist a = 4. Dann b bestimmen.', options: ['f(x) = 4 · 3ˣ', 'f(x) = 3 · 4ˣ', 'f(x) = 4 · 9ˣ', 'f(x) = 36 · 4ˣ'], answer: 0, explanation: 'a = 4 (y-Achse). 4 · b² = 36 → b² = 9 → b = 3. Also f(x) = 4 · 3ˣ.' },
+    { q: 'Welche Aussage über f(x) = a · bˣ mit a > 0 ist FALSCH?', hint: 'Überlege, welche Eigenschaften Exponentialfunktionen haben.', options: ['Der Graph hat keine Nullstelle', 'f(x) ist immer positiv', 'Der Graph schneidet die x-Achse', 'Der y-Achsenabschnitt ist a'], answer: 2, explanation: 'f(x) = a · bˣ > 0 für alle x (wenn a > 0), der Graph berührt die x-Achse NIEMALS.' },
+    { q: 'Durch P(1 | 6) und Q(4 | 48). Was ist b?', hint: 'Dividiere beide Gleichungen: b³ = 48/6', options: ['b = 2', 'b = 3', 'b = 4', 'b = 8'], answer: 0, explanation: '(II):(I): b³ = 48/6 = 8 → b = ³√8 = 2.' },
+    { q: 'g(x) = 7 · 0,8ˣ: steigt oder fällt der Graph?', hint: 'Schaue auf b.', options: ['Steigt, weil 0,8 < 1', 'Fällt, weil 0,8 < 1', 'Steigt, weil 7 > 0', 'Hängt vom x-Wert ab'], answer: 1, explanation: '0 < b = 0,8 < 1 → fallender Graph (exponentielle Abnahme).' },
+    { q: 'Anfangswert 4, Verdopplungszeit 3 Jahre. Welche Funktion gilt?', hint: 'f(3) = 2 · f(0) = 8. Dann b³ = 2.', options: ['f(x) = 4 · 2ˣ', 'f(x) = 2 · 4ˣ', 'f(x) = 4 · ³√2ˣ', 'f(x) = 4 · (³√2)ˣ'], answer: 3, explanation: '4 · b³ = 8 → b³ = 2 → b = ³√2 ≈ 1,26. f(x) = 4 · (³√2)ˣ.' }
+  ],
+  k3: [
+    { q: 'Was ergibt log₂(32)?', hint: '2 hoch was ergibt 32?', options: ['4', '5', '16', '6'], answer: 1, explanation: '2⁵ = 32, also log₂(32) = 5.' },
+    { q: 'Was ergibt log₅(1)?', hint: 'Jede Basis hoch 0 ergibt 1.', options: ['5', '1', '0', '−1'], answer: 2, explanation: '5⁰ = 1, also log₅(1) = 0. Das gilt für jede Basis!' },
+    { q: 'Wie schreibt man 10⁻² = 0,01 als Logarithmus?', hint: 'bʸ = x ⟺ y = log_b(x)', options: ['log₀,₀₁(10) = −2', 'log₁₀(0,01) = −2', 'log₂(0,01) = 10', 'log₋₂(10) = 0,01'], answer: 1, explanation: 'b = 10, y = −2, x = 0,01 → log₁₀(0,01) = −2.' },
+    { q: 'Löse: 1,03ˣ = 2', hint: 'bˣ = c → x = log_b(c)', options: ['x = log₂(1,03)', 'x = log₁,₀₃(2)', 'x = 2 / 1,03', 'x = 1,03 − 2'], answer: 1, explanation: '1,03ˣ = 2 → x = log₁,₀₃(2) = log(2)/log(1,03) ≈ 23,45.' },
+    { q: 'Löse: 200 · 1,06ˣ = 500', hint: 'Erst durch 200 dividieren, dann Logarithmus.', options: ['x ≈ 7,86', 'x ≈ 15,73', 'x ≈ 2,5', 'x ≈ 8,77'], answer: 1, explanation: '1,06ˣ = 2,5 → x = log₁,₀₆(2,5) = log(2,5)/log(1,06) ≈ 15,73.' },
+    { q: 'Ein Guthaben wächst um 4 % jährlich. Wann hat es sich verdoppelt?', hint: '1,04ⁿ = 2 → n = log₁,₀₄(2)', options: ['n ≈ 25 Jahre', 'n ≈ 17,67 Jahre', 'n ≈ 12,5 Jahre', 'n ≈ 50 Jahre'], answer: 1, explanation: 'n = log₁,₀₄(2) = log(2)/log(1,04) ≈ 17,67 Jahre.' }
+  ],
+  k4: [
+    { q: 'Woran erkennst du exponentielles Wachstum in einer Tabelle?', hint: 'Vergleiche Differenzen vs. Quotienten.', options: ['Die Differenzen sind konstant', 'Die Quotienten sind konstant', 'Die Werte steigen schnell', 'Der Anfangswert ist groß'], answer: 1, explanation: 'Konstante Quotienten → exponentielles Wachstum. Konstante Differenzen → lineares Wachstum.' },
+    { q: 'Folge: 500 → 600 → 720 → 864. Welches Modell passt?', hint: 'Quotienten: 600/500 = 1,2 ; 720/600 = 1,2 ...', options: ['Lineares Modell', 'Exponentielles Modell mit q = 1,2', 'Exponentielles Modell mit q = 1,1', 'Kein Wachstumsmodell'], answer: 1, explanation: 'Alle Quotienten = 1,2 → exponentiell mit f(x) = 500 · 1,2ˣ.' },
+    { q: 'Eine Immobilie kostet 175 000 € und steigt 4,5 % jährlich. Wert nach 10 Jahren?', hint: 'W(10) = 175 000 · 1,045¹⁰', options: ['≈ 254 000 €', '≈ 271 770 €', '≈ 300 000 €', '≈ 218 750 €'], answer: 1, explanation: 'W(10) = 175 000 · 1,045¹⁰ = 175 000 · 1,5530 ≈ 271 770 €.' },
+    { q: 'Schulden: 1 Mio. € heute, 350 000 € in 10 Jahren. Jährliche Abnahme?', hint: 'q¹⁰ = 0,35 → q = 0,35^(1/10)', options: ['ca. −5 %', 'ca. −10 %', 'ca. −15 %', 'ca. −7,5 %'], answer: 1, explanation: 'q = 0,35^0,1 ≈ 0,9003 → p = −9,97 % ≈ −10 % pro Jahr.' },
+    { q: 'Warum ist ein exponentielles Wachstumsmodell für Epidemien nur kurzfristig realistisch?', hint: 'Denke an begrenzende Faktoren in der Realität.', options: ['Weil die Mathematik falsch ist', 'Weil Maßnahmen, Immunität und begrenzte Bevölkerungszahl das Wachstum bremsen', 'Weil Exponentialfunktionen keine Nullstelle haben', 'Weil logarithmisches Wachstum besser ist'], answer: 1, explanation: 'In der Realität bremsen Maßnahmen, Immunität und begrenzte Bevölkerung das Wachstum.' }
+  ]
+};
+
+// ══════════════════════════════════════════════════════
+// QUIZ ENGINE
+// ══════════════════════════════════════════════════════
+const quizState = {};
+
+function shuffleOptions(q) {
+  // Create indexed options, shuffle, remember new correct index
+  const indexed = q.options.map((opt, i) => ({ opt, isCorrect: i === q.answer }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  return {
+    options: indexed.map(o => o.opt),
+    answer: indexed.findIndex(o => o.isCorrect)
+  };
+}
+
+function initQuiz(key) {
+  if (!quizState[key]) {
+    // Pre-shuffle all questions once per session
+    const shuffled = quizData[key].map(q => {
+      const s = shuffleOptions(q);
+      return { ...q, options: s.options, answer: s.answer };
+    });
+    quizState[key] = { current: 0, answers: [], done: false, questions: shuffled };
+  }
+  renderQuiz(key);
+}
+
+function renderQuiz(key) {
+  const qs = quizState[key];
+  const data = qs.questions;
+  const container = document.getElementById(`quiz-${key}-container`);
+  if (qs.done) { renderResult(key, container); return; }
+
+  const q = data[qs.current];
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let dots = data.map((_, i) => {
+    let cls = 'quiz-dot';
+    if (i < qs.current) cls += ' done';
+    else if (i === qs.current) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="quiz-container">
+      <div class="quiz-progress">${dots}</div>
+      <div class="quiz-card">
+        <div class="quiz-num">FRAGE ${qs.current + 1} VON ${data.length}</div>
+        <div class="quiz-question">${q.q}</div>
+        ${q.hint ? `
+        <div class="tip-box">
+          <div class="tip-toggle" onclick="toggleTip(this)">
+            <span class="tip-toggle-label">💡 TIPP — Anklicken zum Einblenden</span>
+            <span class="tip-arrow">▼</span>
+          </div>
+          <div class="tip-body">${q.hint}</div>
+        </div>` : ''}
+        <div class="quiz-options" id="opts-${key}">
+          ${q.options.map((opt, i) => `
+            <div class="quiz-option" id="opt-${key}-${i}" onclick="selectAnswer('${key}', ${i})">
+              <span class="option-letter">${letters[i]}</span>${opt}
+            </div>
+          `).join('')}
+        </div>
+        <div class="quiz-feedback" id="feedback-${key}"></div>
+      </div>
+      <div class="quiz-nav">
+        <div style="color:var(--muted);font-size:0.8rem;font-family:var(--mono)">${qs.answers.filter(a => a).length} richtig</div>
+        <button class="btn btn-primary" id="next-btn-${key}" onclick="nextQuestion('${key}')" disabled>Weiter →</button>
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(key, idx) {
+  const qs = quizState[key];
+  const q = qs.questions[qs.current];
+
+  document.querySelectorAll(`#opts-${key} .quiz-option`).forEach(o => { o.classList.add('disabled'); o.onclick = null; });
+
+  const isCorrect = idx === q.answer;
+  document.getElementById(`opt-${key}-${idx}`).classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) document.getElementById(`opt-${key}-${q.answer}`).classList.add('correct');
+
+  const feedbackEl = document.getElementById(`feedback-${key}`);
+  feedbackEl.className = `quiz-feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  feedbackEl.innerHTML = `<strong>${isCorrect ? '✓ Richtig!' : '✗ Leider falsch.'}</strong>${q.explanation}`;
+
+  if (isCorrect) { addXP(20); state.correctAnswers++; }
+  qs.answers.push(isCorrect);
+  document.getElementById(`next-btn-${key}`).disabled = false;
+  saveProgress();
+}
+
+function nextQuestion(key) {
+  const qs = quizState[key];
+  qs.current++;
+  if (qs.current >= qs.questions.length) {
+    qs.done = true;
+    state.quizzesCompleted++;
+    state.quizScores[key] = qs.answers.filter(a => a).length;
+    markNavDone(`${key}-quiz`);
+  }
+  renderQuiz(key);
+  saveProgress();
+}
+
+function renderResult(key, container) {
+  const qs = quizState[key];
+  const correct = qs.answers.filter(a => a).length;
+  const total = qs.questions.length;
+  const pct = Math.round((correct / total) * 100);
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👍' : '📚';
+
+  container.innerHTML = `
+    <div class="result-card">
+      <div class="result-emoji">${emoji}</div>
+      <div class="result-score">${correct}/${total}</div>
+      <div class="result-label">${pct}% richtig</div>
+      <div class="xp-gained">+${correct * 20} XP erhalten ⚡</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="retryQuiz('${key}')">Nochmal versuchen</button>
+        <button class="btn btn-primary" onclick="showScreen('stats')">Fortschritt ansehen 📊</button>
+      </div>
+    </div>`;
+}
+
+function retryQuiz(key) {
+  const reshuffled = quizData[key].map(q => {
+    const s = shuffleOptions(q);
+    return { ...q, options: s.options, answer: s.answer };
+  });
+  quizState[key] = { current: 0, answers: [], done: false, questions: reshuffled };
+  renderQuiz(key);
+}
+
+// ══════════════════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════════════════
+const cards = [
+  { term: 'Exponentielles Wachstum', hint: 'Was ist die Grundformel?', formula: 'B(n) = B(0) · qⁿ', answer: 'Der Bestand wird mit jedem Schritt mit dem Wachstumsfaktor q multipliziert. q > 1: Wachstum, 0 < q < 1: Abnahme.' },
+  { term: 'Wachstumsfaktor q', hint: 'Wie berechnet man q aus p?', formula: 'q = 1 + p/100', answer: 'Bei Zunahme um p%: q = 1 + p/100. Bei Abnahme um p%: q = 1 − p/100.' },
+  { term: 'Exponentialfunktion', hint: 'Was bedeuten a und b?', formula: 'f(x) = a · bˣ', answer: 'a = Anfangswert (y-Achsenabschnitt). b > 1: steigend. 0 < b < 1: fallend. Keine Nullstelle!' },
+  { term: 'Logarithmus', hint: 'Was ist die Definition?', formula: 'bʸ = x ⟺ y = log_b(x)', answer: '"log_b(x) ist der Exponent, mit dem man b potenzieren muss, um x zu erhalten." Eselsbrücke: b hoch WAS ergibt x?' },
+  { term: 'Verdopplungszeit', hint: 'Wie berechnet man sie?', formula: 'qⁿ = 2 → n = log_q(2)', answer: 'Zeitspanne, in der sich der Bestand verdoppelt. Unabhängig vom Startwert! Mit Logarithmus berechnen.' },
+  { term: 'Halbwertszeit', hint: 'Wie berechnet man sie?', formula: 'qⁿ = 0,5 → n = log_q(0,5)', answer: 'Zeitspanne, in der sich der Bestand halbiert. q = Wachstumsfaktor (muss < 1 sein für Abnahme).' },
+  { term: 'Basiswechsel für TR', hint: 'Nur log-Taste vorhanden?', formula: 'log_b(x) = log(x) / log(b)', answer: 'Jeden Logarithmus kann man mit dem Zehnerlogarithmus berechnen: einfach durch log(b) dividieren.' },
+  { term: 'Exponentialgleichung lösen', hint: 'a · bˣ = c', formula: 'x = log_b(c/a)', answer: '1. Durch a dividieren. 2. Logarithmus anwenden. 3. Mit TR: x = log(c/a) / log(b).' },
+  { term: 'Lineares vs. exponentielles Modell', hint: 'Wie unterscheidet man?', formula: 'Diff. konstant ↔ Quot. konstant', answer: 'Konstante Differenzen: lineares Modell f(x) = mx + b. Konstante Quotienten: exponentielles Modell f(x) = a · bˣ.' },
+  { term: 'Funktion durch 2 Punkte', hint: 'Keiner liegt auf y-Achse', formula: '(II):(I) → b, dann a', answer: 'Gleichungssystem: beide Punkte einsetzen. Dividieren: a fällt weg, b bestimmbar. Dann b in eine Gleichung → a berechnen.' },
+];
+
+let currentCard = 0;
+let cardFlipped = false;
+
+function initFlashcards() {
+  document.getElementById('fc-total').textContent = cards.length;
+  showCard(0);
+}
+function showCard(idx) {
+  currentCard = idx; cardFlipped = false;
+  const card = cards[idx];
+  document.getElementById('fc-term').textContent = card.term;
+  document.getElementById('fc-hint').textContent = card.hint;
+  document.getElementById('fc-formula').textContent = card.formula;
+  document.getElementById('fc-answer').textContent = card.answer;
+  document.getElementById('fc-current').textContent = idx + 1;
+  document.getElementById('flashcard').classList.remove('flipped');
+}
+function flipCard() { cardFlipped = !cardFlipped; document.getElementById('flashcard').classList.toggle('flipped', cardFlipped); }
+function nextCard() { showCard((currentCard + 1) % cards.length); }
+function prevCard() { showCard((currentCard - 1 + cards.length) % cards.length); }
+
+// ══════════════════════════════════════════════════════
+// CALCULATORS
+// ══════════════════════════════════════════════════════
+function calcExp() {
+  const b0 = parseFloat(document.getElementById('r1-b0').value);
+  const p = parseFloat(document.getElementById('r1-p').value);
+  const n = parseFloat(document.getElementById('r1-n').value);
+  const type = document.getElementById('r1-type').value;
+  if (isNaN(b0) || isNaN(p) || isNaN(n)) return;
+  const q = type === 'grow' ? 1 + p/100 : 1 - p/100;
+  const result = b0 * Math.pow(q, n);
+  document.getElementById('r1-result').innerHTML = `Gleichung: B(n) = ${b0} · ${q.toFixed(4)}ⁿ\nB(${n}) = ${b0} · ${q.toFixed(4)}^${n}\nB(${n}) ≈ ${result.toLocaleString('de-DE', {maximumFractionDigits:2})}`;
+}
+function calcFactor() {
+  const b0 = parseFloat(document.getElementById('r2-b0').value);
+  const bn = parseFloat(document.getElementById('r2-bn').value);
+  const n = parseFloat(document.getElementById('r2-n').value);
+  if (isNaN(b0) || isNaN(bn) || isNaN(n) || b0 === 0) return;
+  const q = Math.pow(bn / b0, 1/n);
+  const p = (q - 1) * 100;
+  document.getElementById('r2-result').innerHTML = `q = ⁿ√(B(n)/B(0)) = ${n}√(${bn}/${b0})\nq ≈ ${q.toFixed(5)}\nWachstumsrate p = (${q.toFixed(4)} − 1) · 100 = ${p.toFixed(2)} %`;
+}
+function calcLog() {
+  const b = parseFloat(document.getElementById('log-b').value);
+  const x = parseFloat(document.getElementById('log-x').value);
+  if (isNaN(b) || isNaN(x) || b <= 0 || b === 1 || x <= 0) { document.getElementById('log-result').textContent = 'Ungültige Eingabe (b > 0, b ≠ 1, x > 0)'; return; }
+  const result = Math.log(x) / Math.log(b);
+  document.getElementById('log-result').innerHTML = `log_${b}(${x}) = log(${x}) / log(${b})\n= ${Math.log10(x).toFixed(5)} / ${Math.log10(b).toFixed(5)}\n≈ ${result.toFixed(4)}\n\nProbe: ${b}^${result.toFixed(4)} ≈ ${Math.pow(b, result).toFixed(2)} ✓`;
+}
+function solveEq() {
+  const a = parseFloat(document.getElementById('eq-a').value);
+  const b = parseFloat(document.getElementById('eq-b').value);
+  const c = parseFloat(document.getElementById('eq-c').value);
+  if (isNaN(a) || isNaN(b) || isNaN(c) || a === 0 || b <= 0 || b === 1) { document.getElementById('eq-result').textContent = 'Ungültige Eingabe'; return; }
+  const ratio = c / a;
+  if (ratio <= 0) { document.getElementById('eq-result').textContent = 'Keine Lösung (c/a muss positiv sein)'; return; }
+  const x = Math.log(ratio) / Math.log(b);
+  document.getElementById('eq-result').innerHTML = `${a} · ${b}ˣ = ${c}\n${b}ˣ = ${c}/${a} = ${ratio.toFixed(4)}\nx = log_${b}(${ratio.toFixed(4)}) = log(${ratio.toFixed(4)}) / log(${b})\nx ≈ ${x.toFixed(4)}\n\nProbe: ${a} · ${b}^${x.toFixed(2)} ≈ ${(a * Math.pow(b, x)).toFixed(2)} ✓`;
+}
+function calcVHW() {
+  const type = document.getElementById('vhw-type').value;
+  const p = parseFloat(document.getElementById('vhw-p').value);
+  if (isNaN(p)) return;
+  const q = 1 + p/100;
+  const target = type === 'double' ? 2 : 0.5;
+  const n = Math.log(target) / Math.log(q);
+  const label = type === 'double' ? 'Verdopplungszeit' : 'Halbwertszeit';
+  document.getElementById('vhw-result').innerHTML = `Wachstumsrate: p = ${p} % → q = ${q.toFixed(4)}\n${label}: ${q.toFixed(4)}ⁿ = ${target}\nn = log_${q.toFixed(4)}(${target}) = log(${target}) / log(${q.toFixed(4)})\nn ≈ ${Math.abs(n).toFixed(2)} Zeitschritte`;
+}
+
+// ══════════════════════════════════════════════════════
+// XP & PROGRESS
+// ══════════════════════════════════════════════════════
+function addXP(amount) {
+  state.xp += amount;
+  document.getElementById('xpCount').textContent = state.xp;
+  document.getElementById('globalProgress').style.width = Math.min(100, (state.xp / 600) * 100) + '%';
+  showToast(`+${amount} XP ⚡`, 'success');
+  saveProgress();
+}
+function markNavDone(screenId) {
+  const nav = document.querySelector(`[data-screen="${screenId}"]`);
+  if (nav) nav.classList.add('done');
+}
+function updateStats() {
+  document.getElementById('stat-xp').textContent = state.xp;
+  document.getElementById('stat-correct').textContent = state.correctAnswers;
+  document.getElementById('stat-quizzes').textContent = state.quizzesCompleted;
+  const achList = document.getElementById('ach-list');
+  const achs = [];
+  if (state.xp >= 100) achs.push('⚡ Erste 100 XP');
+  if (state.xp >= 300) achs.push('🚀 300 XP-Club');
+  if (state.correctAnswers >= 5) achs.push('🎯 5 richtige Antworten');
+  if (state.quizzesCompleted >= 1) achs.push('✏️ Erstes Quiz geschafft');
+  if (state.quizzesCompleted >= 4) achs.push('🏆 Alle Quizze abgeschlossen');
+  if (Object.keys(state.quizScores).some(k => state.quizScores[k] === quizData[k].length)) achs.push('💯 Perfektes Quiz');
+  achList.innerHTML = achs.length
+    ? achs.map(a => `<span style="background:rgba(124,111,255,0.15);border:1px solid rgba(124,111,255,0.3);color:var(--accent);border-radius:8px;padding:6px 12px;font-size:0.85rem">${a}</span>`).join('')
+    : '<span style="color:var(--muted)">Noch keine Abzeichen – lerne weiter!</span>';
+}
+
+// ══════════════════════════════════════════════════════
+// CHART
+// ══════════════════════════════════════════════════════
+function initChart() {
+  const canvas = document.getElementById('expChart');
+  if (!canvas || canvas.dataset.drawn) return;
+  canvas.dataset.drawn = '1';
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 600, H = 200;
+  canvas.width = W; canvas.height = H;
+  ctx.fillStyle = '#16161f'; ctx.fillRect(0, 0, W, H);
+  const xMin = -3, xMax = 4, yMin = 0, yMax = 10;
+  function toCanvas(x, y) { return { cx: ((x-xMin)/(xMax-xMin))*W, cy: H - ((y-yMin)/(yMax-yMin))*H }; }
+  ctx.strokeStyle = '#2a2a3a'; ctx.lineWidth = 1;
+  for (let x = xMin; x <= xMax; x++) { const p = toCanvas(x,0); ctx.beginPath(); ctx.moveTo(p.cx,0); ctx.lineTo(p.cx,H); ctx.stroke(); }
+  for (let y = 0; y <= yMax; y += 2) { const p = toCanvas(0,y); ctx.beginPath(); ctx.moveTo(0,p.cy); ctx.lineTo(W,p.cy); ctx.stroke(); }
+  ctx.strokeStyle = '#5555aa'; ctx.lineWidth = 1.5;
+  const ax0 = toCanvas(0,0);
+  ctx.beginPath(); ctx.moveTo(0,ax0.cy); ctx.lineTo(W,ax0.cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ax0.cx,0); ctx.lineTo(ax0.cx,H); ctx.stroke();
+  const funcs = [
+    { fn: x => Math.pow(2,x), color: '#7c6fff', label: 'f(x) = 2ˣ' },
+    { fn: x => Math.pow(3,x), color: '#4ecdc4', label: 'h(x) = 3ˣ' },
+    { fn: x => Math.pow(0.5,x), color: '#ff6b6b', label: 'g(x) = 0.5ˣ' },
+  ];
+  funcs.forEach(({ fn, color }) => {
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.beginPath();
+    let first = true;
+    for (let px = 0; px <= W; px++) {
+      const x = xMin + (px/W)*(xMax-xMin), y = fn(x);
+      if (y < yMin || y > yMax) { first = true; continue; }
+      const p = toCanvas(x,y);
+      if (first) { ctx.moveTo(p.cx,p.cy); first = false; } else ctx.lineTo(p.cx,p.cy);
+    }
+    ctx.stroke();
+  });
+  ctx.font = '11px Space Mono, monospace';
+  funcs.forEach(({ color, label }, i) => { ctx.fillStyle = color; ctx.fillText(label, 8, 18+i*18); });
+}
+
+// ══════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 2000);
+}
+
+// ══════════════════════════════════════════════════════
+// BOOT – auto-login if session exists
+// ══════════════════════════════════════════════════════
+(function boot() {
+  try {
+    const u = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
+    if (u && u.email) {
+      completeLogin(u.email, u.name || u.email.split('@')[0]);
+    }
+  } catch {}
+})();
+</script>
+</body>
+</html>

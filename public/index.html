@@ -11,6 +11,11 @@
     --accent: #7c6fff; --accent2: #ff6b6b; --accent3: #4ecdc4; --accent4: #ffd93d;
     --text: #e8e8f0; --muted: #7070a0; --success: #4ecdc4; --error: #ff6b6b;
     --mono: 'Space Mono', monospace; --sans: 'DM Sans', sans-serif; --display: 'Syne', sans-serif;
+    --shadow: 0 4px 24px rgba(0,0,0,.4);
+  }
+  html.light {
+    --bg: #f4f4f8; --surface: #ffffff; --surface2: #eeeef4; --border: #d0d0e0;
+    --text: #1a1a2e; --muted: #6060a0; --shadow: 0 4px 24px rgba(0,0,0,.10);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
@@ -132,8 +137,24 @@
   .progress-bar-wrap { flex: 1; max-width: 300px; margin: 0 24px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 3px; transition: width .5s ease; width: 0%; }
   .xp-display { font-family: var(--mono); font-size: .75rem; color: var(--accent4); white-space: nowrap; }
-  .user-chip { display: flex; align-items: center; gap: 7px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px 3px 3px; font-size: .78rem; color: var(--muted); cursor: default; }
-  .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .user-chip { position: relative; display: flex; align-items: center; gap: 7px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 12px 3px 3px; font-size: .82rem; color: var(--text); cursor: pointer; user-select: none; transition: border-color .15s; }
+  .user-chip:hover { border-color: var(--accent); }
+  .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .user-dropdown {
+    position: absolute; top: calc(100% + 8px); right: 0; min-width: 180px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: var(--shadow); z-index: 500; overflow: hidden;
+    display: none; animation: fadeIn .15s ease;
+  }
+  .user-chip.open .user-dropdown { display: block; }
+  .user-dropdown-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+    font-size: .88rem; cursor: pointer; transition: background .12s; color: var(--text);
+  }
+  .user-dropdown-item:hover { background: var(--surface2); }
+  .user-dropdown-item.danger { color: var(--error); }
+  .user-dropdown-divider { height: 1px; background: var(--border); margin: 2px 0; }
+  .user-dropdown-header { padding: 10px 16px 6px; font-size: .72rem; font-family: var(--mono); color: var(--muted); letter-spacing: .06em; }
 
   /* ─── HAMBURGER ─── */
   .hamburger-btn { display: none; flex-direction: column; justify-content: center; gap: 5px; cursor: pointer; padding: 6px; border: none; background: transparent; margin-right: 6px; }
@@ -157,7 +178,7 @@
   .nav-item .icon { font-size: 1rem; flex-shrink: 0; }
   .nav-item .check { margin-left: auto; color: var(--success); font-size: .8rem; opacity: 0; }
   .nav-item.done .check { opacity: 1; }
-  .main { margin-left: 260px; padding: 40px; max-width: 900px; }
+  .main { margin-left: 260px; padding: 40px; min-width: 0; }
   .screen { display: none; animation: fadeIn .3s ease; }
   .screen.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -165,7 +186,7 @@
   /* ─── HERO ─── */
   .hero { text-align: center; padding: 60px 20px; }
   .hero-badge { display: inline-block; background: rgba(124,111,255,.15); border: 1px solid rgba(124,111,255,.3); color: var(--accent); font-family: var(--mono); font-size: .7rem; padding: 4px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: .1em; }
-  .hero h1 { font-family: var(--display); font-size: clamp(2rem,5vw,3.5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; margin-bottom: 16px; }
+  .hero h1 { font-family: var(--display); font-size: clamp(1.6rem,4vw,3rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 16px; word-break: break-word; }
   .hero h1 .highlight { background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .hero p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin: 0 auto 40px; }
   .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 40px; text-align: left; }
@@ -310,21 +331,10 @@
   .tip-body.open { max-height: 120px; padding: 0 14px 12px; }
 
   /* ─── FOOTER ─── */
-  .app-footer { margin-top: 56px; padding: 20px 40px; background: var(--surface); border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: .78rem; color: var(--muted); }
-  .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
-  .footer-link { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--muted); cursor: pointer; text-decoration: none; transition: color .15s; }
-  .footer-link:hover { color: var(--text); }
+
 
   /* ─── LEGAL ─── */
-  .legal-backdrop { position: fixed; inset: 0; z-index: 950; background: rgba(0,0,0,.75); backdrop-filter: blur(4px); display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
-  .legal-backdrop.show { display: flex; }
-  .legal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px; width: 100%; max-width: 680px; position: relative; animation: fadeIn .25s ease; }
-  .legal-close { position: absolute; top: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); font-size: .9rem; transition: color .15s; }
-  .legal-close:hover { color: var(--text); }
-  .legal-box h2 { font-family: var(--display); font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; padding-right: 40px; }
-  .legal-box h3 { font-family: var(--display); font-weight: 700; font-size: .95rem; color: var(--accent); margin: 18px 0 6px; }
-  .legal-box p { color: #c0c0d8; font-size: .87rem; line-height: 1.7; margin-bottom: 8px; }
-  .legal-box ul { padding-left: 18px; color: #c0c0d8; font-size: .87rem; line-height: 1.7; margin-bottom: 8px; }
+
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 1100px) { .sidebar { width: 220px; } .main { margin-left: 220px; } }
@@ -352,6 +362,61 @@
   strong.hl { color: var(--accent4); } strong.hl2 { color: var(--accent); } strong.hl3 { color: var(--accent3); }
   .zwei-spalten { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 600px) { .zwei-spalten { grid-template-columns: 1fr; } }
+  /* ─── THEME SWITCHER ─── */
+  .theme-switcher {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px; margin-right: 8px;
+  }
+  .theme-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: .85rem;
+    background: transparent; color: var(--muted); transition: all .15s;
+  }
+  .theme-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+
+  /* ─── QUIZ SIDEBAR STATES ─── */
+  .nav-item .quiz-status { margin-left: auto; font-size: .75rem; }
+  .nav-item .quiz-status.done { color: var(--success); }
+  .nav-item .quiz-status.in-progress { color: var(--accent4); }
+
+  /* ─── STATS OVERHAUL ─── */
+  .stats-hero { background: linear-gradient(135deg, rgba(124,111,255,.15), rgba(78,205,196,.1)); border: 1px solid rgba(124,111,255,.25); border-radius: 16px; padding: 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .stats-hero .xp-big { font-family: var(--display); font-size: 3.5rem; font-weight: 800; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stats-hero .xp-label { font-size: .8rem; color: var(--muted); font-family: var(--mono); margin-top: 4px; }
+  .stats-hero .xp-bar-wrap { flex: 1; min-width: 180px; }
+  .stats-hero .xp-bar-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+  .stats-hero .xp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 4px; transition: width .6s ease; }
+  .stats-hero .xp-bar-label { font-size: .75rem; color: var(--muted); font-family: var(--mono); }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .stat-num { font-family: var(--display); font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+  .quiz-progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .quiz-progress-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+  .quiz-progress-card .qpc-label { font-family: var(--mono); font-size: .68rem; color: var(--muted); letter-spacing: .08em; margin-bottom: 10px; }
+  .quiz-progress-card .qpc-score { font-family: var(--display); font-size: 1.6rem; font-weight: 800; }
+  .quiz-progress-card .qpc-bar { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .quiz-progress-card .qpc-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
+  .ach-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .ach-badge { display: flex; align-items: center; gap: 8px; background: rgba(124,111,255,.12); border: 1px solid rgba(124,111,255,.3); color: var(--accent); border-radius: 10px; padding: 8px 14px; font-size: .85rem; }
+
+  /* ─── LIGHT MODE ADJUSTMENTS ─── */
+  html.light .content-block { box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  html.light .quiz-card { box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  html.light .calc-result { color: #5040b0; }
+  html.light .math-box { color: #5040b0; }
+  html.light .card-back { background: linear-gradient(135deg,rgba(124,111,255,.08),rgba(78,205,196,.08)); }
+  html.light header { background: rgba(244,244,248,.95); }
+  html.light .sidebar { background: #fff; }
+  html.light .auth-card { box-shadow: 0 8px 40px rgba(0,0,0,.12); }
+  html.light .quiz-option { color: var(--text); }
+  html.light .quiz-option.correct { color: #1a6b5e; }
+  html.light .quiz-option.wrong { color: #8b1a1a; }
+
+  /* ─── FOOTER REMOVED - keep app-footer selector minimal ─── */
+  .app-footer-spacer { height: 40px; }
+
 </style>
 </head>
 <body>
@@ -468,38 +533,7 @@
   </div>
 </div>
 
-<!-- ═══ LEGAL MODALS ═══ -->
-<div class="legal-backdrop" id="datenschutzModal">
-  <div class="legal-box">
-    <div class="legal-close" onclick="closeLegal('datenschutzModal')">✕</div>
-    <h2>🔒 Datenschutzerklärung</h2>
-    <h3>1. Verantwortliche Stelle</h3>
-    <p>Hollenberg-Gymnasium Waldbröl. Diese Lern-App wird im Rahmen des Mathematikunterrichts in Klasse 10 eingesetzt.</p>
-    <h3>2. Gespeicherte Daten</h3>
-    <p>Bei der Registrierung werden folgende Daten gespeichert:</p>
-    <ul><li>Benutzername und verschlüsseltes Passwort (bcrypt-Hash)</li><li>Anzeigename (optional)</li><li>Lernfortschritt (XP, Quiz-Ergebnisse)</li></ul>
-    <h3>3. Datenspeicherung</h3>
-    <p>Alle Daten werden auf einem gesicherten Server gespeichert. Passwörter werden niemals im Klartext gespeichert, sondern nur als kryptografischer Hash (bcrypt, Kostenfaktor 12).</p>
-    <h3>4. Cookies</h3>
-    <p>Nach dem Login wird ein Session-Token als httpOnly-Cookie gesetzt. Dieses Cookie ermöglicht die automatische Anmeldung und enthält keine persönlichen Daten.</p>
-    <h3>5. Datenlöschung</h3>
-    <p>Dein Konto und alle gespeicherten Daten können auf Anfrage gelöscht werden. Wende dich dazu an deinen Lehrer.</p>
-    <h3>6. Kontakt</h3>
-    <p>Bei Fragen wende dich an die Schulverwaltung des Hollenberg-Gymnasiums Waldbröl.</p>
-  </div>
-</div>
-<div class="legal-backdrop" id="impressumModal">
-  <div class="legal-box">
-    <div class="legal-close" onclick="closeLegal('impressumModal')">✕</div>
-    <h2>📋 Impressum</h2>
-    <h3>Herausgeber</h3>
-    <p><strong>Hollenberg-Gymnasium Waldbröl</strong><br>Schulstraße 1 · 51545 Waldbröl · Nordrhein-Westfalen</p>
-    <h3>Verantwortlich</h3>
-    <p>Mathematikfachschaft, Klasse 10. Diese App dient ausschließlich Bildungszwecken zur ZP-10-Vorbereitung.</p>
-    <h3>Haftungsausschluss</h3>
-    <p>Die Inhalte wurden sorgfältig erstellt. Für Richtigkeit und Vollständigkeit kann keine Gewähr übernommen werden.</p>
-  </div>
-</div>
+
 
 <!-- SIDEBAR BACKDROP -->
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
@@ -513,11 +547,24 @@
     <div class="logo">Mathe <span>10</span></div>
   </div>
   <div class="progress-bar-wrap"><div class="progress-bar-fill" id="globalProgress"></div></div>
-  <div style="display:flex;align-items:center;gap:10px">
+  <div style="display:flex;align-items:center;gap:8px">
     <div class="xp-display">⚡ <span id="xpCount">0</span> XP</div>
-    <div class="user-chip" id="userChip" style="display:none">
+    <div class="theme-switcher">
+      <button class="theme-btn active" id="themeAuto" onclick="setTheme('auto')" title="Auto">🌓</button>
+      <button class="theme-btn" id="themeLight" onclick="setTheme('light')" title="Hell">☀️</button>
+      <button class="theme-btn" id="themeDark" onclick="setTheme('dark')" title="Dunkel">🌙</button>
+    </div>
+    <div class="user-chip" id="userChip" style="display:none" onclick="toggleUserMenu(event)">
       <div class="user-avatar" id="userAvatar"></div>
-      <span id="userName" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <span id="userName"></span>
+      <span style="font-size:.6rem;color:var(--muted);margin-left:2px">▾</span>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-header" id="userDropdownName"></div>
+        <div class="user-dropdown-divider"></div>
+        <div class="user-dropdown-item" onclick="showScreen('stats')">📊 Mein Fortschritt</div>
+        <div class="user-dropdown-divider"></div>
+        <div class="user-dropdown-item danger" onclick="doLogout()">🚪 Abmelden</div>
+      </div>
     </div>
   </div>
 </header>
@@ -527,23 +574,23 @@
   <div class="sidebar-section">Start</div>
   <div class="nav-item active" data-screen="home" onclick="showScreen('home', this)"><span class="icon">🏠</span> Übersicht<span class="check">✓</span></div>
   <div class="sidebar-section">Kapitel 1</div>
-  <div class="nav-item" data-screen="k1-theorie" onclick="showScreen('k1-theorie', this)"><span class="icon">📖</span> Wachstumsarten<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k1-rechner" onclick="showScreen('k1-rechner', this)"><span class="icon">🧮</span> Exponentialrechner<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k1-quiz" onclick="showScreen('k1-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 1<span class="check">✓</span></div>
+  <div class="nav-item" data-screen="k1-theorie" onclick="showScreen('k1-theorie', this)"><span class="icon">📖</span> Wachstumsarten</div>
+  <div class="nav-item" data-screen="k1-rechner" onclick="showScreen('k1-rechner', this)"><span class="icon">🧮</span> Exponentialrechner</div>
+  <div class="nav-item" data-screen="k1-quiz" onclick="showScreen('k1-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 1<span class="quiz-status" id="qs-k1-quiz"></span></div>
   <div class="sidebar-section">Kapitel 2</div>
-  <div class="nav-item" data-screen="k2-theorie" onclick="showScreen('k2-theorie', this)"><span class="icon">📖</span> Exponentialfunktionen<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k2-quiz" onclick="showScreen('k2-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 2<span class="check">✓</span></div>
+  <div class="nav-item" data-screen="k2-theorie" onclick="showScreen('k2-theorie', this)"><span class="icon">📖</span> Exponentialfunktionen</div>
+  <div class="nav-item" data-screen="k2-quiz" onclick="showScreen('k2-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 2<span class="quiz-status" id="qs-k2-quiz"></span></div>
   <div class="sidebar-section">Kapitel 3</div>
-  <div class="nav-item" data-screen="k3-theorie" onclick="showScreen('k3-theorie', this)"><span class="icon">📖</span> Logarithmen<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k3-rechner" onclick="showScreen('k3-rechner', this)"><span class="icon">🧮</span> Logarithmenrechner<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k3-quiz" onclick="showScreen('k3-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 3<span class="check">✓</span></div>
+  <div class="nav-item" data-screen="k3-theorie" onclick="showScreen('k3-theorie', this)"><span class="icon">📖</span> Logarithmen</div>
+  <div class="nav-item" data-screen="k3-rechner" onclick="showScreen('k3-rechner', this)"><span class="icon">🧮</span> Logarithmenrechner</div>
+  <div class="nav-item" data-screen="k3-quiz" onclick="showScreen('k3-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 3<span class="quiz-status" id="qs-k3-quiz"></span></div>
   <div class="sidebar-section">Kapitel 4</div>
-  <div class="nav-item" data-screen="k4-theorie" onclick="showScreen('k4-theorie', this)"><span class="icon">📖</span> Modellierung<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="k4-quiz" onclick="showScreen('k4-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 4<span class="check">✓</span></div>
+  <div class="nav-item" data-screen="k4-theorie" onclick="showScreen('k4-theorie', this)"><span class="icon">📖</span> Modellierung</div>
+  <div class="nav-item" data-screen="k4-quiz" onclick="showScreen('k4-quiz', this)"><span class="icon">✏️</span> Quiz – Kap. 4<span class="quiz-status" id="qs-k4-quiz"></span></div>
   <div class="sidebar-section">Extra</div>
-  <div class="nav-item" data-screen="flashcards" onclick="showScreen('flashcards', this)"><span class="icon">🃏</span> Lernkarten<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="formelsammlung" onclick="showScreen('formelsammlung', this)"><span class="icon">📋</span> Formelsammlung<span class="check">✓</span></div>
-  <div class="nav-item" data-screen="stats" onclick="showScreen('stats', this)"><span class="icon">📊</span> Mein Fortschritt<span class="check">✓</span></div>
+  <div class="nav-item" data-screen="flashcards" onclick="showScreen('flashcards', this)"><span class="icon">🃏</span> Lernkarten</div>
+  <div class="nav-item" data-screen="formelsammlung" onclick="showScreen('formelsammlung', this)"><span class="icon">📋</span> Formelsammlung</div>
+  <div class="nav-item" data-screen="stats" onclick="showScreen('stats', this)"><span class="icon">📊</span> Mein Fortschritt</div>
 </div>
 
 <!-- MAIN -->
@@ -564,14 +611,7 @@
           <div class="chapter-card" onclick="showScreen('k4-theorie')"><div class="num">KAPITEL 04</div><h3>Modellierung</h3><p>Von Daten zur Modellfunktion, Prognosen</p></div>
         </div>
       </div>
-      <footer class="app-footer">
-        <span>© 2025 Hollenberg-Gymnasium Waldbröl · Mathematik 10</span>
-        <div class="footer-links">
-          <span class="footer-link" onclick="openLegal('datenschutzModal')">🔒 Datenschutz</span>
-          <span class="footer-link" onclick="openLegal('impressumModal')">📋 Impressum</span>
-          <span class="footer-link" onclick="doLogout()" style="color:var(--error)">Abmelden</span>
-        </div>
-      </footer>
+      <div class="app-footer-spacer"></div>
     </div>
 
     <!-- K1 THEORIE -->
@@ -601,7 +641,7 @@
           <div class="content-block warning"><div class="block-label">TYPISCHE FEHLER</div><h4>Achtung!</h4><ul class="feature-list"><li>Abnahme um 15 % bedeutet q = 0,85 — nicht q = −0,15</li><li>Die Einheit von n beachten: Jahre, Monate oder Tage?</li></ul></div>
         </div>
       </div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k1-rechner')">→ Zum Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k1-quiz')">Zum Quiz ✏️</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k1-rechner')">Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k1-quiz')">Quiz</button></div>
     </div>
 
     <!-- K1 RECHNER -->
@@ -609,7 +649,7 @@
       <div class="lesson-header"><div class="tag">KAPITEL 1 · RECHNER</div><h2>Exponentialrechner</h2></div>
       <div class="calculator"><div class="calc-title">Bestand nach n Zeitschritten berechnen</div><div class="calc-form"><div class="form-group"><label>Startwert B(0)</label><input type="number" id="r1-b0" value="1000"></div><div class="form-group"><label>Wachstum/Abnahme</label><select id="r1-type"><option value="grow">Wachstum (+)</option><option value="shrink">Abnahme (−)</option></select></div><div class="form-group"><label>Rate p in %</label><input type="number" id="r1-p" value="5" step="0.1"></div><div class="form-group"><label>Zeitschritte n</label><input type="number" id="r1-n" value="10"></div></div><button class="btn btn-primary" onclick="calcExp()">Berechnen</button><div class="calc-result" id="r1-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
       <div class="calculator"><div class="calc-title">Wachstumsfaktor aus zwei Werten bestimmen</div><div class="calc-form"><div class="form-group"><label>Startwert B(0)</label><input type="number" id="r2-b0" value="5000"></div><div class="form-group"><label>Endwert B(n)</label><input type="number" id="r2-bn" value="6077.53"></div><div class="form-group"><label>Anzahl Schritte n</label><input type="number" id="r2-n" value="4"></div></div><button class="btn btn-primary" onclick="calcFactor()">Faktor bestimmen</button><div class="calc-result" id="r2-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
-      <button class="btn btn-primary" onclick="showScreen('k1-quiz')">Zum Quiz ✏️</button>
+      <button class="btn btn-primary" onclick="showScreen('k1-quiz')">Quiz</button>
     </div>
 
     <!-- K1 QUIZ -->
@@ -625,7 +665,7 @@
         <div class="tab-content" id="t2c"><div class="content-block formula"><div class="block-label">VERDOPPLUNGSZEIT & HALBWERTSZEIT</div><h4>Definition</h4><div class="zwei-spalten"><div><p style="margin-bottom:8px"><strong class="hl3">Verdopplungszeit:</strong></p><div class="math-box" style="margin-top:10px">qⁿ = 2 → n = log_q(2)</div></div><div><p style="margin-bottom:8px"><strong class="hl2">Halbwertszeit:</strong></p><div class="math-box" style="margin-top:10px">qⁿ = 0,5 → n = log_q(0,5)</div></div></div></div></div>
         <div class="tab-content" id="t2d"><div class="content-block formula"><div class="block-label">VORGEHEN</div><h4>Exponentialfunktion durch zwei Punkte aufstellen</h4><ul class="feature-list"><li>Beide Punkte einsetzen → zwei Gleichungen</li><li>Gleichungen <strong class="hl">dividieren</strong> → a fällt weg</li><li>b berechnen, dann a</li></ul></div><div class="content-block example"><div class="block-label">BEISPIEL</div><h4>P(1 | 6) und Q(4 | 48)</h4><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Gleichungssystem</div><div class="math">(I) a · b¹ = 6 &nbsp;&nbsp; (II) a · b⁴ = 48</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Dividieren (II):(I)</div><div class="math">b³ = 48/6 = 8 → b = 2</div></div></div><div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Ergebnis</div><div class="math">f(x) = 3 · 2ˣ</div></div></div></div></div></div>
       </div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k2-quiz')">Zum Quiz ✏️</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k2-quiz')">Quiz</button></div>
     </div>
 
     <!-- K2 QUIZ -->
@@ -641,7 +681,7 @@
         <div class="tab-content" id="t3c"><div class="content-block formula"><div class="block-label">EXPONENTIALGLEICHUNGEN</div><h4>bˣ = c lösen</h4><div class="math-box">bˣ = c  ⟹  x = log_b(c)</div><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Vorfaktor wegdividieren</div><div class="math">500 · 1,08ˣ = 1200 | ÷ 500 → 1,08ˣ = 2,4</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Logarithmus anwenden</div><div class="math">x = log(2,4)/log(1,08) ≈ 11,38</div></div></div></div></div></div>
         <div class="tab-content" id="t3d"><div class="content-block example"><div class="block-label">BEISPIEL – VERDOPPLUNGSZEIT</div><h4>5 % jährlich – wann verdoppelt?</h4><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="math">1,05ⁿ = 2</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="math">n = log₁,₀₅(2) ≈ 14,21 Jahre</div></div></div></div></div></div>
       </div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k3-rechner')">→ Zum Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k3-rechner')">Rechner</button> &nbsp;<button class="btn btn-secondary" onclick="showScreen('k3-quiz')">Quiz</button></div>
     </div>
 
     <!-- K3 RECHNER -->
@@ -650,7 +690,7 @@
       <div class="calculator"><div class="calc-title">Logarithmus berechnen</div><div class="calc-form"><div class="form-group"><label>Basis b</label><input type="number" id="log-b" value="2" step="0.01"></div><div class="form-group"><label>Argument x</label><input type="number" id="log-x" value="32" step="0.01"></div></div><button class="btn btn-primary" onclick="calcLog()">Berechnen</button><div class="calc-result" id="log-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
       <div class="calculator"><div class="calc-title">Exponentialgleichung lösen: a · bˣ = c</div><div class="calc-form"><div class="form-group"><label>Vorfaktor a</label><input type="number" id="eq-a" value="500"></div><div class="form-group"><label>Basis b</label><input type="number" id="eq-b" value="1.08" step="0.001"></div><div class="form-group"><label>Ergebnis c</label><input type="number" id="eq-c" value="1200"></div></div><button class="btn btn-primary" onclick="solveEq()">Gleichung lösen</button><div class="calc-result" id="eq-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
       <div class="calculator"><div class="calc-title">Verdopplungszeit / Halbwertszeit</div><div class="calc-form"><div class="form-group"><label>Typ</label><select id="vhw-type"><option value="double">Verdopplungszeit</option><option value="half">Halbwertszeit</option></select></div><div class="form-group"><label>Wachstumsrate p in %</label><input type="number" id="vhw-p" value="5" step="0.1"></div></div><button class="btn btn-primary" onclick="calcVHW()">Berechnen</button><div class="calc-result" id="vhw-result" style="margin-top:16px">Ergebnis erscheint hier...</div></div>
-      <button class="btn btn-primary" onclick="showScreen('k3-quiz')">Zum Quiz ✏️</button>
+      <button class="btn btn-primary" onclick="showScreen('k3-quiz')">Quiz</button>
     </div>
 
     <!-- K3 QUIZ -->
@@ -661,7 +701,7 @@
       <div class="lesson-header"><div class="tag">KAPITEL 4 · THEORIE</div><h2>Wachstumsprozesse modellieren</h2></div>
       <div class="content-block formula"><div class="block-label">VORGEHEN</div><h4>Von Daten zur Modellfunktion</h4><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Daten analysieren</div><p>Differenzen und Quotienten aufeinanderfolgender Werte bilden.</p></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Wachstumsart bestimmen</div><div class="math">Konstante Differenzen → lineares Modell</div><div class="math">Konstante Quotienten → exponentielles Modell</div></div></div><div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Parameter bestimmen & Prognosen erstellen</div></div></div></div></div>
       <div class="content-block warning"><div class="block-label">ZP-TYPISCHE AUFGABE</div><h4>Covid-19 Beispiel</h4><p>23. Januar 2020: 581 Fälle. Verdopplung alle 2,5 Tage.</p><div class="step-list"><div class="step"><div class="step-num">1</div><div class="step-content"><div class="math">b = 2^(1/2,5) = 2^0,4 ≈ 1,32</div></div></div><div class="step"><div class="step-num">2</div><div class="step-content"><div class="math">f(t) = 581 · 1,32ᵗ</div></div></div><div class="step"><div class="step-num">3</div><div class="step-content"><div class="math">Wann 100 000? t = log₁,₃₂(100000/581) ≈ 18,5 Tage</div></div></div></div></div>
-      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k4-quiz')">Zum Quiz ✏️</button></div>
+      <div style="margin-top:24px"><button class="btn btn-primary" onclick="showScreen('k4-quiz')">Quiz</button></div>
     </div>
 
     <!-- K4 QUIZ -->
@@ -672,7 +712,7 @@
       <div class="lesson-header"><div class="tag">EXTRA</div><h2>Lernkarten</h2></div>
       <p style="color:var(--muted);margin-bottom:24px">Klicke auf die Karte, um die Antwort zu sehen.</p>
       <div class="flashcard-wrap"><div class="flashcard" id="flashcard" onclick="flipCard()"><div class="card-face card-front"><div class="hint">FRAGE — klicken zum Umdrehen</div><div class="term" id="fc-term">–</div><div class="definition" id="fc-hint" style="color:var(--muted)"></div></div><div class="card-face card-back"><div class="hint">ANTWORT</div><div class="math-expr" id="fc-formula"></div><div class="definition" id="fc-answer"></div></div></div></div>
-      <div class="flashcard-nav"><button class="btn btn-secondary" onclick="prevCard()">← Zurück</button><div class="card-counter"><span id="fc-current">1</span> / <span id="fc-total">1</span></div><button class="btn btn-secondary" onclick="nextCard()">Weiter →</button></div>
+      <div class="flashcard-nav"><button class="btn btn-secondary" onclick="prevCard()">Zurück</button><div class="card-counter"><span id="fc-current">1</span> / <span id="fc-total">1</span></div><button class="btn btn-secondary" onclick="nextCard()">Weiter →</button></div>
     </div>
 
     <!-- FORMELSAMMLUNG -->
@@ -695,12 +735,39 @@
     <!-- STATS -->
     <div class="screen" id="screen-stats">
       <div class="lesson-header"><div class="tag">FORTSCHRITT</div><h2>Mein Lernfortschritt</h2></div>
+
+      <!-- XP Hero -->
+      <div class="stats-hero">
+        <div>
+          <div class="xp-big" id="stat-xp">0</div>
+          <div class="xp-label">XP GESAMMELT</div>
+        </div>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-label" id="stat-xp-level">Level 1 – Einsteiger</div>
+          <div class="xp-bar-track"><div class="xp-bar-fill" id="stat-xp-bar" style="width:0%"></div></div>
+          <div class="xp-bar-label" style="margin-top:4px" id="stat-xp-next"></div>
+        </div>
+      </div>
+
+      <!-- Schnellstatistiken -->
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="stat-xp">0</div><div class="stat-label">XP gesammelt</div></div>
         <div class="stat-card"><div class="stat-num" id="stat-correct">0</div><div class="stat-label">Richtige Antworten</div></div>
         <div class="stat-card"><div class="stat-num" id="stat-quizzes">0</div><div class="stat-label">Abgeschlossene Quizze</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-accuracy">–</div><div class="stat-label">Trefferquote</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-screens">0</div><div class="stat-label">Besuchte Seiten</div></div>
       </div>
-      <div class="content-block" id="stat-achievements"><div class="block-label">ABZEICHEN</div><h4>Deine Erfolge</h4><div id="ach-list" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px"></div></div>
+
+      <!-- Quiz-Ergebnisse -->
+      <div class="block-label" style="margin-bottom:12px;font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">QUIZ-ERGEBNISSE</div>
+      <div class="quiz-progress-grid">
+        <div class="quiz-progress-card" id="qpc-k1"><div class="qpc-label">KAPITEL 1 · WACHSTUM</div><div class="qpc-score" id="qpc-k1-score" style="color:var(--muted)">—</div><div class="qpc-bar"><div class="qpc-fill" id="qpc-k1-fill" style="width:0%;background:var(--accent)"></div></div></div>
+        <div class="quiz-progress-card" id="qpc-k2"><div class="qpc-label">KAPITEL 2 · FUNKTIONEN</div><div class="qpc-score" id="qpc-k2-score" style="color:var(--muted)">—</div><div class="qpc-bar"><div class="qpc-fill" id="qpc-k2-fill" style="width:0%;background:var(--accent3)"></div></div></div>
+        <div class="quiz-progress-card" id="qpc-k3"><div class="qpc-label">KAPITEL 3 · LOGARITHMEN</div><div class="qpc-score" id="qpc-k3-score" style="color:var(--muted)">—</div><div class="qpc-bar"><div class="qpc-fill" id="qpc-k3-fill" style="width:0%;background:var(--accent2)"></div></div></div>
+        <div class="quiz-progress-card" id="qpc-k4"><div class="qpc-label">KAPITEL 4 · MODELLIERUNG</div><div class="qpc-score" id="qpc-k4-score" style="color:var(--muted)">—</div><div class="qpc-bar"><div class="qpc-fill" id="qpc-k4-fill" style="width:0%;background:var(--accent4)"></div></div></div>
+      </div>
+
+      <!-- Abzeichen -->
+      <div class="content-block"><div class="block-label">ABZEICHEN</div><h4 style="margin-bottom:12px">Deine Erfolge</h4><div class="ach-grid" id="ach-list"></div></div>
     </div>
 
   </div>
@@ -712,9 +779,38 @@
 // ══════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════
-let state = { xp: 0, correctAnswers: 0, quizzesCompleted: 0, completedScreens: [], quizScores: {} };
+let state = { xp: 0, correctAnswers: 0, quizzesCompleted: 0, totalAnswers: 0, completedScreens: [], quizScores: {}, quizInProgress: {} };
 let currentUser = null;
-let adminPassword = null; // gespeichertes Admin-PW für diese Sitzung
+let adminPassword = null;
+
+// ══════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════
+function getSunriseSunset() {
+  const h = new Date().getHours();
+  return h >= 7 && h < 20; // 7-20 Uhr = hell
+}
+
+function applyTheme(mode) {
+  const isLight = mode === 'light' || (mode === 'auto' && getSunriseSunset());
+  document.documentElement.classList.toggle('light', isLight);
+  ['themeAuto','themeLight','themeDark'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  const map = { auto: 'themeAuto', light: 'themeLight', dark: 'themeDark' };
+  document.getElementById(map[mode])?.classList.add('active');
+}
+
+function setTheme(mode) {
+  localStorage.setItem('theme', mode);
+  applyTheme(mode);
+}
+
+// Apply theme immediately on load
+(function() {
+  const saved = localStorage.getItem('theme') || 'auto';
+  applyTheme(saved);
+  // Re-check auto theme every 5 min
+  setInterval(() => { if((localStorage.getItem('theme')||'auto')==='auto') applyTheme('auto'); }, 300000);
+})();
 
 // ══════════════════════════════════════════════════════
 // API HELPER
@@ -789,17 +885,28 @@ async function loadAndShowApp() {
     if (data.progress && Object.keys(data.progress).length > 0) {
       state = { ...state, ...data.progress };
       state.completedScreens = data.progress.completedScreens || [];
+      state.quizScores = data.progress.quizScores || {};
+      state.quizInProgress = data.progress.quizInProgress || {};
       document.getElementById('xpCount').textContent = state.xp;
       document.getElementById('globalProgress').style.width = Math.min(100, (state.xp/600)*100) + '%';
-      state.completedScreens.forEach(id => markNavDone(id));
+      // Restore quiz sidebar statuses
+      ['k1','k2','k3','k4'].forEach(k => {
+        if (state.quizScores[k] !== undefined) updateQuizStatus(k, 'done');
+        else if (state.quizInProgress[k]) updateQuizStatus(k, 'in-progress');
+      });
     }
   } catch {}
 
   // User-Chip befüllen
-  const initials = (currentUser.displayName || currentUser.username).split(/[\s._-]/).map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2)||'?';
+  const displayName = currentUser.displayName || currentUser.username;
+  const initials = displayName.split(/[\s._-]/).map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2)||'?';
   document.getElementById('userAvatar').textContent = initials;
-  document.getElementById('userName').textContent = currentUser.displayName || currentUser.username;
+  document.getElementById('userName').textContent = displayName;
+  document.getElementById('userDropdownName').textContent = displayName;
   document.getElementById('userChip').style.display = 'flex';
+  // Set theme buttons active state
+  const savedTheme = localStorage.getItem('theme') || 'auto';
+  applyTheme(savedTheme);
 
   document.getElementById('auth-screen').style.display = 'none';
 }
@@ -923,8 +1030,7 @@ async function deleteUser(id, username) {
 
 function openModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-function openLegal(id) { document.getElementById(id).classList.add('show'); }
-function closeLegal(id) { document.getElementById(id).classList.remove('show'); }
+
 
 // ══════════════════════════════════════════════════════
 // NAVIGATION
@@ -953,6 +1059,19 @@ function switchTab(btn, groupId, targetId) {
   btn.closest('.section-tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
 }
+
+// ══════════════════════════════════════════════════════
+// USER MENU
+// ══════════════════════════════════════════════════════
+function toggleUserMenu(e) {
+  e.stopPropagation();
+  const chip = document.getElementById('userChip');
+  chip.classList.toggle('open');
+}
+// Close dropdown on outside click
+document.addEventListener('click', () => {
+  document.getElementById('userChip')?.classList.remove('open');
+});
 
 function toggleSidebar() {
   const s = document.getElementById('sidebar'), bd = document.getElementById('sidebarBackdrop'), btn = document.getElementById('hamburgerBtn');
@@ -1025,6 +1144,12 @@ function initQuiz(key) {
     const shuffled = quizData[key].map(q => { const s = shuffleOptions(q); return { ...q, ...s }; });
     quizState[key] = { current: 0, answers: [], done: false, questions: shuffled };
   }
+  // Mark as in-progress in sidebar if not done
+  if (!quizState[key].done) {
+    if (!state.quizInProgress) state.quizInProgress = {};
+    state.quizInProgress[key] = true;
+    updateQuizStatus(key, 'in-progress');
+  }
   renderQuiz(key);
 }
 
@@ -1048,7 +1173,7 @@ function renderQuiz(key) {
       </div>
       <div class="quiz-nav">
         <div style="color:var(--muted);font-size:.8rem;font-family:var(--mono)">${qs.answers.filter(a=>a).length} richtig</div>
-        <button class="btn btn-primary" id="next-btn-${key}" onclick="nextQuestion('${key}')" disabled>Weiter →</button>
+        <button class="btn btn-primary" id="next-btn-${key}" onclick="nextQuestion('${key}')" disabled>Weiter</button>
       </div>
     </div>`;
 }
@@ -1063,6 +1188,7 @@ function selectAnswer(key, idx) {
   fb.className = `quiz-feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
   fb.innerHTML = `<strong>${isCorrect ? '✓ Richtig!' : '✗ Leider falsch.'}</strong>${q.explanation}`;
   if (isCorrect) { addXP(20); state.correctAnswers++; }
+  state.totalAnswers = (state.totalAnswers || 0) + 1;
   qs.answers.push(isCorrect);
   document.getElementById(`next-btn-${key}`).disabled = false;
   saveProgress();
@@ -1071,7 +1197,12 @@ function selectAnswer(key, idx) {
 function nextQuestion(key) {
   const qs = quizState[key];
   qs.current++;
-  if (qs.current >= qs.questions.length) { qs.done = true; state.quizzesCompleted++; state.quizScores[key] = qs.answers.filter(a=>a).length; markNavDone(`${key}-quiz`); }
+  if (qs.current >= qs.questions.length) {
+    qs.done = true; state.quizzesCompleted++;
+    state.quizScores[key] = qs.answers.filter(a=>a).length;
+    if (state.quizInProgress) delete state.quizInProgress[key];
+    markNavDone(`${key}-quiz`);
+  }
   renderQuiz(key); saveProgress();
 }
 
@@ -1083,6 +1214,12 @@ function renderResult(key, container) {
 function retryQuiz(key) {
   const reshuffled = quizData[key].map(q => { const s = shuffleOptions(q); return { ...q, ...s }; });
   quizState[key] = { current: 0, answers: [], done: false, questions: reshuffled };
+  // Remove done from scores and nav
+  delete state.quizScores[key];
+  if (!state.quizInProgress) state.quizInProgress = {};
+  state.quizInProgress[key] = true;
+  updateQuizStatus(key, 'in-progress');
+  saveProgress();
   renderQuiz(key);
 }
 
@@ -1127,21 +1264,85 @@ function addXP(amount) {
   showToast(`+${amount} XP ⚡`, 'success');
   saveProgress();
 }
-function markNavDone(screenId) { const nav = document.querySelector(`[data-screen="${screenId}"]`); if (nav) nav.classList.add('done'); }
+function updateQuizStatus(key, status) {
+  // status: 'done' | 'in-progress' | ''
+  const span = document.getElementById(`qs-${key}-quiz`);
+  if (!span) return;
+  span.className = 'quiz-status' + (status ? ' ' + status : '');
+  span.textContent = status === 'done' ? '✓' : status === 'in-progress' ? '…' : '';
+}
+function markNavDone(screenId) {
+  // Only mark quiz items
+  if (!screenId.endsWith('-quiz')) return;
+  updateQuizStatus(screenId.replace('-quiz',''), 'done');
+}
 function updateStats() {
-  document.getElementById('stat-xp').textContent = state.xp;
-  document.getElementById('stat-correct').textContent = state.correctAnswers;
-  document.getElementById('stat-quizzes').textContent = state.quizzesCompleted;
+  const xp = state.xp || 0;
+  const LEVELS = [
+    { name: 'Einsteiger', min: 0, max: 100 },
+    { name: 'Lernender', min: 100, max: 250 },
+    { name: 'Fortgeschrittener', min: 250, max: 450 },
+    { name: 'Experte', min: 450, max: 600 },
+    { name: 'Meister', min: 600, max: 600 },
+  ];
+  const level = LEVELS.findLastIndex(l => xp >= l.min) ?? 0;
+  const lv = LEVELS[Math.min(level, LEVELS.length-1)];
+  const nextLv = LEVELS[Math.min(level+1, LEVELS.length-1)];
+  const pct = lv.max > lv.min ? Math.min(100, ((xp - lv.min) / (nextLv.min - lv.min)) * 100) : 100;
+
+  document.getElementById('stat-xp').textContent = xp;
+  document.getElementById('stat-xp-level').textContent = `Level ${level+1} – ${lv.name}`;
+  document.getElementById('stat-xp-bar').style.width = pct + '%';
+  document.getElementById('stat-xp-next').textContent = level < LEVELS.length-1 ? `${xp} / ${nextLv.min} XP bis Level ${level+2}` : '🏆 Maximales Level erreicht!';
+
+  document.getElementById('stat-correct').textContent = state.correctAnswers || 0;
+  document.getElementById('stat-quizzes').textContent = state.quizzesCompleted || 0;
+  const total = state.totalAnswers || 0;
+  const acc = total > 0 ? Math.round((state.correctAnswers/total)*100) + '%' : '–';
+  document.getElementById('stat-accuracy').textContent = acc;
+  document.getElementById('stat-screens').textContent = (state.completedScreens || []).length;
+
+  // Quiz cards
+  const quizColors = { k1: 'var(--accent)', k2: 'var(--accent3)', k3: 'var(--accent2)', k4: 'var(--accent4)' };
+  ['k1','k2','k3','k4'].forEach(k => {
+    const total = quizData[k].length;
+    const score = state.quizScores?.[k];
+    const scoreEl = document.getElementById(`qpc-${k}-score`);
+    const fillEl = document.getElementById(`qpc-${k}-fill`);
+    if (score !== undefined) {
+      const pct = Math.round((score/total)*100);
+      scoreEl.textContent = `${score}/${total} · ${pct}%`;
+      scoreEl.style.color = pct >= 80 ? 'var(--success)' : pct >= 60 ? 'var(--accent4)' : 'var(--error)';
+      fillEl.style.width = pct + '%';
+      fillEl.style.background = quizColors[k];
+    } else if (state.quizInProgress?.[k]) {
+      scoreEl.textContent = 'In Bearbeitung …';
+      scoreEl.style.color = 'var(--accent4)';
+      fillEl.style.width = '30%';
+      fillEl.style.background = 'var(--accent4)';
+    } else {
+      scoreEl.textContent = 'Noch nicht gespielt';
+      scoreEl.style.color = 'var(--muted)';
+      fillEl.style.width = '0%';
+    }
+  });
+
+  // Achievements
   const achs = [];
-  if (state.xp >= 100) achs.push('⚡ Erste 100 XP');
-  if (state.xp >= 300) achs.push('🚀 300 XP-Club');
-  if (state.correctAnswers >= 5) achs.push('🎯 5 richtige Antworten');
-  if (state.quizzesCompleted >= 1) achs.push('✏️ Erstes Quiz');
-  if (state.quizzesCompleted >= 4) achs.push('🏆 Alle Quizze');
-  if (Object.keys(state.quizScores).some(k => state.quizScores[k] === quizData[k].length)) achs.push('💯 Perfektes Quiz');
+  if (xp >= 100) achs.push(['⚡', 'Erste 100 XP']);
+  if (xp >= 300) achs.push(['🚀', '300 XP-Club']);
+  if (xp >= 600) achs.push(['💎', '600 XP – Meister!']);
+  if ((state.correctAnswers||0) >= 5) achs.push(['🎯', '5 richtige Antworten']);
+  if ((state.correctAnswers||0) >= 20) achs.push(['🔥', '20 richtige Antworten']);
+  if ((state.quizzesCompleted||0) >= 1) achs.push(['✏️', 'Erstes Quiz geschafft']);
+  if ((state.quizzesCompleted||0) >= 4) achs.push(['🏆', 'Alle Quizze abgeschlossen']);
+  if (Object.keys(state.quizScores||{}).some(k => state.quizScores[k] === quizData[k].length)) achs.push(['💯', 'Perfektes Quiz']);
+  const accNum = total > 0 ? (state.correctAnswers/total) : 0;
+  if (total >= 10 && accNum >= 0.9) achs.push(['🎓', '90%+ Trefferquote']);
+
   document.getElementById('ach-list').innerHTML = achs.length
-    ? achs.map(a => `<span style="background:rgba(124,111,255,.15);border:1px solid rgba(124,111,255,.3);color:var(--accent);border-radius:8px;padding:6px 12px;font-size:.85rem">${a}</span>`).join('')
-    : '<span style="color:var(--muted)">Noch keine Abzeichen</span>';
+    ? achs.map(([icon,label]) => `<div class="ach-badge"><span style="font-size:1.2rem">${icon}</span>${label}</div>`).join('')
+    : '<span style="color:var(--muted);font-size:.88rem">Löse Quizze um Abzeichen freizuschalten!</span>';
 }
 
 let saveTimeout;
